@@ -17,7 +17,7 @@
 - New features and fixes use a dual artifact pair (problem/solution), which are automatically scaffolded upon branch creation. The agent must fill them out during planning.
 - Multi-SPEC work requires the first SPEC before delivery SPECs.
 - When RFC applies in the SPEC model, RFC creation or update belongs to that first SPEC.
-- **Mandatory In-Code Commentary**: Documentation must live in both canonical markdown knowledge files and directly in the code itself via module layer headers, JSDoc/TSDoc/Rust doc blocks, and step-by-step logic indicators. No implementation file is complete without corresponding in-code documentation.
+- **Mandatory In-Code Commentary**: Documentation must live in both canonical markdown knowledge files and directly in the code itself via module layer headers, JSDoc/TSDoc blocks, and step-by-step logic indicators. No implementation file is complete without corresponding in-code documentation.
 - **Mandatory Local Validation**: Before pushing commits or opening a PR, the agent MUST run the full local validation check (`pnpm validate`) to catch index drift, lint errors, and typecheck warnings locally. Pushing code with failing local checks is strictly forbidden.
 - **CI Wait Strategy**: To wait for GitHub CI check results, the agent MUST NOT poll continuously. Instead, it must schedule a single timer of at least 180 seconds (or look up the average execution duration of past runs) to allow CI checks to complete before querying their status.
 

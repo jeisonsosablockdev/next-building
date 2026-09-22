@@ -2,7 +2,7 @@
 
 ## 1. Governance & Agent Assignment
 - **Initiative Planner**: `planner`
-- **Lead Implementation Specialist**: `[frontend | solana | db | api | state | nft]`
+- **Lead Implementation Specialist**: `[frontend | db | api | state]`
 - **Architect Gatekeeper**: `architect` (Gate 1 & Gate 2)
 - **Quality & Review**: `qa` & `reviewer`
 - **Security Auditor**: `security` (where applicable)
@@ -12,7 +12,7 @@
      1. Presentation Layer (app, components)
      2. Application/Consumption Layer (queries, mutations, hooks)
      3. Domain/Pipelines/Services Layer (business logic, validations, adapters)
-     4. Infrastructure Layer (db repositories, Solana kit, external APIs) -->
+     4. Infrastructure Layer (db repositories, external APIs, cloud services) -->
 
 ## 3. Atomic Slices & Logical Sequence
 <!-- Desglose cronológico y atómico de SPECs de negocio / verticales. Cada SPEC debe ser autocontenida y secuencial.
@@ -39,6 +39,6 @@
 - [ ] Aprobación explícita del humano registrada.
 
 ## 6. Spec Artifact Traceability
-- **Problem Spec**: [feature-${DOC_SLUG}.md](file:///Users/jaymusicmachine/Documents/Desarrollo/brids/knowledge/features/feature-${DOC_SLUG}.md)
-- **Solution Spec**: [feature-${DOC_SLUG}-implementation.md](file:///Users/jaymusicmachine/Documents/Desarrollo/brids/knowledge/features/feature-${DOC_SLUG}-implementation.md)
-- **Linear Issue**: [Linear Ticket #${ISSUE_ID}](https://linear.app/brids-app/issue/${ISSUE_ID})
+- **Problem Spec**: [feature-${DOC_SLUG}.md](file:///Users/jaymusicmachine/Documents/Desarrollo/next-building/knowledge/features/feature-${DOC_SLUG}.md)
+- **Solution Spec**: [feature-${DOC_SLUG}-implementation.md](file:///Users/jaymusicmachine/Documents/Desarrollo/next-building/knowledge/features/feature-${DOC_SLUG}-implementation.md)
+- **Linear Issue**: [Linear Ticket #${ISSUE_ID}](https://linear.app/next-building/issue/${ISSUE_ID})

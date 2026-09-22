@@ -4,7 +4,7 @@ title: Index
 description: Index - migrated from knowledge/
 tags: [guides]
 timestamp: 2026-07-20T04:23:56Z
-resource: https://github.com/jeisonsosablockdev/brids/blob/develop/knowledge/guides/index.md
+resource: https://github.com/jeisonsosablockdev/next-building/blob/develop/knowledge/guides/index.md
 ---
 
 
@@ -25,4 +25,3 @@ Implementation guides and best practices.
 * [Linear Single Issue Slice Planning](linear-single-issue-slice-planning.md)
 * [Operability Observability Security Deploy](operability-observability-security-deploy.md)
 * [Route Architecture and Templates](route-architecture-and-templates.md)
-* [Solana Kit Migration Recipes](solana-kit-migration-recipes.md)

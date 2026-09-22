@@ -1,10 +1,10 @@
 /**
  * @file apps/web/src/lib/pipelines/example-pipeline.ts
- * @description Layer 3: Domain / Pipelines - Example Solana Validation Pipeline.
- * Encapsulates multi-step business logic validation for Solana RPC health.
+ * @description Layer 3: Domain / Pipelines - Application Health Check Pipeline.
+ * Encapsulates multi-step validation logic for application environment and API connectivity.
  */
 
-import { getSolanaRpcUrl } from "../infrastructure/solana";
+import { getApiBaseUrl } from "../infrastructure/api-client";
 
 /**
  * Pipeline execution context contract.
@@ -12,10 +12,10 @@ import { getSolanaRpcUrl } from "../infrastructure/solana";
 export interface HealthPipelineContext {
   /** Timestamp when pipeline started */
   startedAt: number;
-  /** Resolved RPC endpoint URL */
-  rpcEndpoint: string;
-  /** Active network target */
-  network: "devnet" | "mainnet-beta";
+  /** Resolved API endpoint base URL */
+  apiEndpoint: string;
+  /** Active execution environment identifier */
+  environment: string;
 }
 
 /**
@@ -31,7 +31,7 @@ export interface HealthPipelineResult {
 }
 
 /**
- * Executes the starter domain health check pipeline against Solana Devnet.
+ * Executes the starter domain health check pipeline for application runtime readiness.
  *
  * @returns {Promise<HealthPipelineResult>} The pipeline result and diagnostic metadata.
  */
@@ -39,14 +39,14 @@ export async function executeHealthPipeline(): Promise<HealthPipelineResult> {
   // Step 1: Initialize pipeline execution context
   const context: HealthPipelineContext = {
     startedAt: Date.now(),
-    rpcEndpoint: getSolanaRpcUrl(),
-    network: "devnet",
+    apiEndpoint: getApiBaseUrl(),
+    environment: process.env.NODE_ENV || "development",
   };
 
   try {
-    // Step 2: Validate Devnet-only invariant
-    if (!context.rpcEndpoint.includes("devnet") && !context.rpcEndpoint.includes("127.0.0.1")) {
-      throw new Error("Violation: Non-devnet RPC endpoint configured in starter pipeline.");
+    // Step 2: Validate API endpoint is non-empty and well-formed
+    if (!context.apiEndpoint.startsWith("http://") && !context.apiEndpoint.startsWith("https://")) {
+      throw new Error(`Invalid API endpoint URL: ${context.apiEndpoint}`);
     }
 
     // Step 3: Return verified success result

@@ -10,14 +10,12 @@ runner_compatible:
 scope:
   - "authority and signer review"
   - "replay and session validation"
-  - "CPI and privileged-path review"
+  - "session and privileged-path review"
   - "dependency and trust-boundary analysis"
   - "security invariant and authority check in-code commentary review"
 reads:
   - ".agents/policies/security-policy.md"
-  - ".agents/policies/blockchain-policy.md"
   - ".agents/policies/frontend-policy.md"
   - "knowledge/governance/security-quality-policy.md"
-  - "knowledge/governance/nft-policy.md"
 system_prompt: |
-  Audit trust boundaries and exploit paths. Validate authority transitions, signer assumptions, replay protection, client and server trust boundaries, privileged route checks, unsafe CPI risks, and dependency exposure. Verify that all security-sensitive checks and authority guards include inline explanatory comments describing the invariant defended and attack vector mitigated. Return blocking findings, required mitigations, and any evidence still needed before completion.
+  Audit trust boundaries and exploit paths. Validate authority transitions, signer assumptions, replay protection, client and server trust boundaries, privileged route checks, unsafe server-action / API risks, and dependency exposure. Verify that all security-sensitive checks and authority guards include inline explanatory comments describing the invariant defended and attack vector mitigated. Return blocking findings, required mitigations, and any evidence still needed before completion.

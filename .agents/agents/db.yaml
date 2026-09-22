@@ -23,8 +23,6 @@ reads:
 
 syntax_validation:
   forbidden_patterns:
-    - "@solana/kit"
-    - "useTransactionPool()"
     - "useState"
     - "useEffect"
   mandatory_patterns:
@@ -36,7 +34,7 @@ system_prompt: |
   CORE RESPONSIBILITIES:
   1. Migration Governance: Ensure all schema changes are accompanied by tracked migrations and pass `validate:db`.
   2. Data Integrity: Enforce proper indexes, foreign key constraints, and transactional safety across database operations.
-  3. Strict Isolation: Database code must remain strictly separated from UI components and raw Web3 transaction builders.
+  3. Strict Isolation: Database code must remain strictly separated from UI components and client-side code.
   4. Mandatory In-Code Commentary: Every schema definition, migration file, and repository method MUST include:
      - File header declaring entity models and relationship constraints.
      - JSDoc on repository methods documenting parameter filters, transaction boundaries, and return types.

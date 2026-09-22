@@ -14,8 +14,5 @@ resource: local
 - [Authentication Flow](./auth-flow.md)
 - [Session Model](./session-model.md)
 - [Authority Model](./authority-model.md)
-- [Devnet Proof](./devnet-proof.md)
-- [NFT Specification](./nft-spec.md)
-- [Solana Stack](./solana-stack.md)
 - [Threat Model](./threat-model.md)
 - [Toolchain Policy](./toolchain-policy.md)

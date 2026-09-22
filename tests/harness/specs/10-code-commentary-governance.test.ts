@@ -22,7 +22,7 @@ describe('10 - Canonical In-Code Commentary Governance & Harness Standards', () 
       const cleanCodeMd = fs.readFileSync(path.join(governanceDir, 'clean-code-folder-structure.md'), 'utf-8');
       expect(cleanCodeMd).toContain('4.1. Estándar Canónico de Comentarios e Indicaciones en el Código');
       expect(cleanCodeMd).toContain('Encabezado de Archivo / Módulo');
-      expect(cleanCodeMd).toContain('JSDoc / TSDoc / Rust');
+      expect(cleanCodeMd).toContain('JSDoc / TSDoc');
       expect(cleanCodeMd).toContain('Step N:');
     });
 
@@ -35,7 +35,7 @@ describe('10 - Canonical In-Code Commentary Governance & Harness Standards', () 
     test('security-quality-policy.md mandates in-code commentary and inline security invariants in Development Philosophy', () => {
       const secPolicyMd = fs.readFileSync(path.join(governanceDir, 'security-quality-policy.md'), 'utf-8');
       expect(secPolicyMd).toContain('Mandatory in-code commentary');
-      expect(secPolicyMd).toContain('security invariants, PDA derivations');
+      expect(secPolicyMd).toContain('security invariants, session checks');
     });
   });
 
@@ -43,7 +43,6 @@ describe('10 - Canonical In-Code Commentary Governance & Harness Standards', () 
     const agentsToVerify = [
       'architect',
       'reviewer',
-      'solana',
       'frontend',
       'api',
       'db',
@@ -76,7 +75,6 @@ describe('10 - Canonical In-Code Commentary Governance & Harness Standards', () 
   describe('3. Agents Policies Execution Constraints & Required Evidence', () => {
     const policiesToVerify = [
       'frontend-policy.md',
-      'blockchain-policy.md',
       'testing-policy.md',
       'docs-policy.md',
       'security-policy.md'
@@ -97,7 +95,6 @@ describe('10 - Canonical In-Code Commentary Governance & Harness Standards', () 
 
   describe('4. Workflows Sequence and Gate 2 Auditing', () => {
     const workflowsToVerify = [
-      'blockchain-cycle.md',
       'frontend-cycle.md',
       'refactor-cycle.md'
     ];

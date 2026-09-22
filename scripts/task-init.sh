@@ -2,6 +2,20 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+# Load project config defaults if present
+PROJECT_CONFIG_FILE="${ROOT_DIR}/.agents/project_config.json"
+if [[ -f "${PROJECT_CONFIG_FILE}" ]]; then
+  CONFIG_DEV="$(node -e 'try{console.log(JSON.parse(fs.readFileSync(process.argv[1])).developerHandle||"")}catch(e){}' "${PROJECT_CONFIG_FILE}" 2>/dev/null || true)"
+  CONFIG_PREFIX="$(node -e 'try{console.log(JSON.parse(fs.readFileSync(process.argv[1])).linear?.issuePrefix||"")}catch(e){}' "${PROJECT_CONFIG_FILE}" 2>/dev/null || true)"
+  DEFAULT_OWNER="${DEFAULT_OWNER:-${CONFIG_DEV:-dev}}"
+  DEFAULT_ISSUE_PREFIX="${DEFAULT_ISSUE_PREFIX:-${CONFIG_PREFIX:-TASK}}"
+else
+  DEFAULT_OWNER="${DEFAULT_OWNER:-dev}"
+  DEFAULT_ISSUE_PREFIX="${DEFAULT_ISSUE_PREFIX:-TASK}"
+fi
+
 BASE_REF="develop"
 FETCH_REMOTE=1
 ASK_MODE="auto"
@@ -18,16 +32,16 @@ Uso:
 Ejemplos:
   ./scripts/task-init.sh --ask
   ./scripts/task-init.sh app initial-ui
-  ./scripts/task-init.sh feature shared fix-ui-elements --mode parent --owner czambrano --issue BRI-38
-  ./scripts/task-init.sh bugfix shared login-redirect-fix --mode parent --owner czambrano --issue BRI-171
-  ./scripts/task-init.sh epic shared admin-collections-console --mode parent --owner czambrano --issue EPIC-011
+  ./scripts/task-init.sh feature shared fix-ui-elements --mode parent --owner jeisonsosa --issue NXT-38
+  ./scripts/task-init.sh bugfix shared login-redirect-fix --mode parent --owner jeisonsosa --issue NXT-171
+  ./scripts/task-init.sh epic shared admin-console --mode parent --owner jeisonsosa --issue EPIC-011
 
 Opciones del bootstrap:
   --ask              Fuerza el pase socrático de clarificación antes de crear la rama
   --no-fetch         Evita refrescar remotos durante el preflight
   --base <ref>       Base branch para el preflight y la rama (default: develop)
   --reasoning-agent  Invoca el agente Self-Discover para generar feature/fix specs
-  --domain <name>    Dominio para el agente (solana, nft, compliance, security, etc.)
+  --domain <name>    Dominio para el agente (frontend, api, db, security, architecture, etc.)
   --output <mode>    Modo de salida: trace, answer, both (default: both)
 
 El resto de argumentos se pasan a ./scripts/git-start.sh.
@@ -50,8 +64,9 @@ normalize_issue_key() {
     exit 1
   fi
 
+  local default_prefix="${DEFAULT_ISSUE_PREFIX:-TASK}"
   if [[ "${value}" =~ ^[0-9]+$ ]]; then
-    printf 'BRI-%s' "${value}"
+    printf '%s-%s' "${default_prefix}" "${value}"
     return 0
   fi
 
@@ -60,7 +75,7 @@ normalize_issue_key() {
     return 0
   fi
 
-  echo "❌ Issue inválido: ${raw}. Usa formato BRI-149."
+  echo "❌ Issue inválido: ${raw}. Usa formato ${default_prefix}-1 o [PREFIX]-[NUMERO]."
   exit 1
 }
 
@@ -110,7 +125,7 @@ print_hint() {
     epic)
       echo "- Canonical docs: knowledge/features/feature-${branch_slug}.md and the matching RFC story set when the epic is RFC-backed."
       ;;
-    feature|security|nft|refactor)
+    feature|security|refactor)
       echo "- Canonical docs: knowledge/features/feature-${branch_slug}.md"
       ;;
   esac
@@ -255,12 +270,28 @@ if [[ -f "${SCRIPT_DIR}/graphify-sync.js" ]]; then
 fi
 
 if [[ "${ASK_MODE}" == "ask" ]]; then
+  if [[ ! -f "${PROJECT_CONFIG_FILE}" && -t 0 ]]; then
+    echo "👋 Primer uso detectado: el proyecto aún no está configurado."
+    read -r -p "¿Deseas ejecutar el asistente de configuración inicial ahora (pnpm setup)? [Y/n]: " RUN_SETUP
+    case "${RUN_SETUP:-Y}" in
+      y|Y|yes|YES)
+        node "${ROOT_DIR}/scripts/setup-project.js"
+        if [[ -f "${PROJECT_CONFIG_FILE}" ]]; then
+          CONFIG_DEV="$(node -e 'try{console.log(JSON.parse(fs.readFileSync(process.argv[1])).developerHandle||"")}catch(e){}' "${PROJECT_CONFIG_FILE}" 2>/dev/null || true)"
+          CONFIG_PREFIX="$(node -e 'try{console.log(JSON.parse(fs.readFileSync(process.argv[1])).linear?.issuePrefix||"")}catch(e){}' "${PROJECT_CONFIG_FILE}" 2>/dev/null || true)"
+          DEFAULT_OWNER="${CONFIG_DEV:-${DEFAULT_OWNER}}"
+          DEFAULT_ISSUE_PREFIX="${CONFIG_PREFIX:-${DEFAULT_ISSUE_PREFIX}}"
+        fi
+        ;;
+    esac
+  fi
+
   echo
   echo "Before we branch, let us make the shape of the work plain."
   prompt_required "What problem or change are we solving?" "" TASK_SUMMARY
   prompt_required "What outcome would make this feel finished?" "" TASK_OUTCOME
-  prompt_required "Which Linear issue type / branch family fits best (feature, bugfix, fix, hotfix, epic, security, nft, refactor)?" "" BRANCH_TYPE
-  prompt_required "Which scope does it touch (app, program, shared)?" "" BRANCH_SCOPE
+  prompt_required "Which Linear issue type / branch family fits best (feature, bugfix, fix, hotfix, epic, security, refactor)?" "" BRANCH_TYPE
+  prompt_required "Which scope does it touch (app, shared, docs, infra)?" "" BRANCH_SCOPE
   prompt_required "What short branch/doc slug should we use?" "" BRANCH_NAME
   prompt_required "What branch mode do we need (single, parent, spec)?" "parent" BRANCH_MODE
   if [[ "${BRANCH_MODE}" == "integration" ]]; then
@@ -269,7 +300,7 @@ if [[ "${ASK_MODE}" == "ask" ]]; then
   fi
 
   case "${BRANCH_TYPE}" in
-    feature|bugfix|fix|hotfix|epic|security|nft|refactor) ;;
+    feature|bugfix|fix|hotfix|epic|security|refactor) ;;
     *)
       echo "❌ Branch family inválida: ${BRANCH_TYPE}"
       exit 1
@@ -285,8 +316,27 @@ if [[ "${ASK_MODE}" == "ask" ]]; then
   esac
 
   if [[ "${BRANCH_MODE}" =~ ^(parent|spec)$ ]]; then
-    prompt_required "What Linear issue key anchors the work (for example BRI-149)?" "" ISSUE_KEY
-    prompt_required "What developer handle owns the branch (for example czambrano)?" "czambrano" OWNER
+    local default_prefix="${DEFAULT_ISSUE_PREFIX:-TASK}"
+    local hooks_path="$(git rev-parse --show-toplevel 2>/dev/null || pwd)/.agents/hooks.json"
+    local require_linear="false"
+    if [[ -f "${hooks_path}" ]]; then
+      require_linear="$(node -e '
+        const fs = require("fs");
+        try {
+          const hooks = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+          console.log(hooks.enforcement_rules?.require_linear_issue_exists !== false ? "true" : "false");
+        } catch(e) {
+          console.log("false");
+        }
+      ' "${hooks_path}")"
+    fi
+
+    if [[ "${require_linear}" == "true" && "${LINEAR_ENABLED:-true}" != "false" ]]; then
+      prompt_required "What Linear issue key anchors the work (for example ${default_prefix}-149)?" "" ISSUE_KEY
+    else
+      prompt_required "What issue key anchors the work (for example ${default_prefix}-1)?" "${default_prefix}-1" ISSUE_KEY
+    fi
+    prompt_required "What developer handle owns the branch (for example ${DEFAULT_OWNER:-dev})?" "${DEFAULT_OWNER:-dev}" OWNER
     OWNER="$(printf '%s' "${OWNER}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//; s/-+/-/g')"
   fi
 
@@ -310,27 +360,45 @@ if [[ "${ASK_MODE}" == "ask" ]]; then
         const fs = require("fs");
         try {
           const hooks = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
-          const allowed = hooks.enforcement_rules?.allowed_developer_handles || ["jaymusicmachine", "jeisonsosa"];
+          const allowed = hooks.enforcement_rules?.allowed_developer_handles || ["*"];
           const owner = process.argv[2].toLowerCase();
-          if (allowed.includes(owner)) {
+          if (allowed.includes("*") || allowed.length === 0 || allowed.includes(owner)) {
             console.log("true");
           } else {
             console.log("false");
           }
         } catch (e) {
-          console.log("false");
+          console.log("true");
         }
       ' "${HOOKS_FILE_PATH}" "${OWNER}")"
 
       if [[ "${VALID_DEV}" != "true" ]]; then
+        ALLOWED_LIST="$(node -e '
+          const fs = require("fs");
+          try {
+            const hooks = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+            console.log((hooks.enforcement_rules?.allowed_developer_handles || ["*"]).join(", "));
+          } catch(e) { console.log("*"); }
+        ' "${HOOKS_FILE_PATH}")"
         echo "❌ ERROR DE GOBERNANZA: El handle de desarrollador '\''${OWNER}'\'' no está permitido."
-        echo "Los handles permitidos configurados en hooks.json son: [jaymusicmachine, jeisonsosa]."
+        echo "Los handles permitidos configurados en hooks.json son: [${ALLOWED_LIST}]."
+        echo "💡 Ejecuta '\''pnpm setup'\'' para configurar tu handle de desarrollador."
         exit 1
       fi
     fi
 
     # Capa 2: Validar existencia del issue key en Linear en modo interactivo
-    if [[ -n "${LINEAR_API_KEY:-}" ]]; then
+    REQUIRE_LINEAR="$(node -e '
+      const fs = require("fs");
+      try {
+        const hooks = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+        console.log(hooks.enforcement_rules?.require_linear_issue_exists !== false ? "true" : "false");
+      } catch (e) {
+        console.log("false");
+      }
+    ' "${HOOKS_FILE_PATH}")"
+
+    if [[ "${REQUIRE_LINEAR}" == "true" && "${LINEAR_ENABLED:-true}" != "false" && -n "${LINEAR_API_KEY:-}" ]]; then
       echo "🔍 Validando existencia de issue ${ISSUE_KEY} en Linear..."
       ISSUE_EXISTS="$(node -e '
         const https = require("https");
@@ -393,6 +461,8 @@ if [[ "${ASK_MODE}" == "ask" ]]; then
       else
         echo "✓ Issue ${ISSUE_KEY} confirmado en Linear."
       fi
+    elif [[ "${REQUIRE_LINEAR}" == "true" && -z "${LINEAR_API_KEY:-}" ]]; then
+      echo "⚠️ Warning: LINEAR_API_KEY no está configurado. Omitiendo validación estricta de issue en Linear."
     fi
   fi
 
@@ -436,6 +506,6 @@ if [[ "${ASK_MODE}" == "ask" ]]; then
   echo
   echo "Next steps"
   echo "- If this is fix/bugfix/hotfix work, create knowledge/fixes/fix-<slug>.md and knowledge/fixes/fix-<slug>-implementation.md."
-  echo "- If this is feature/security/nft/refactor/epic work, keep knowledge/features/feature-<slug>.md aligned with the branch and add RFC docs when the epic requires them."
+  echo "- If this is feature/security/refactor/epic work, keep knowledge/features/feature-<slug>.md aligned with the branch and add RFC docs when the epic requires them."
   echo "- If the work is multi-SPEC, start with the planning SPEC before delivery SPECs and keep them one at a time."
 fi

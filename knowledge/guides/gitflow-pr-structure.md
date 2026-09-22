@@ -4,7 +4,7 @@ title: Gitflow Pr Structure
 description: Gitflow Pr Structure - migrated from knowledge/
 tags: [guides]
 timestamp: 2026-07-20T04:23:56Z
-resource: https://github.com/jeisonsosablockdev/brids/blob/develop/knowledge/guides/gitflow-pr-structure.md
+resource: https://github.com/jeisonsosablockdev/next-building/blob/develop/knowledge/guides/gitflow-pr-structure.md
 ---
 
 # Gitflow PR Structure (Metadata-First)
@@ -43,7 +43,7 @@ For multi-slice work, the first branch after the Linear initiative branch is the
    - `RFC`
    - `Riesgos`
    - `Rollback Plan`
-   - `Prueba Devnet`
+   - `Verification Evidence`
 7. Run local metadata lint.
 8. Run lightweight local governance preflight.
 9. Open PR in draft mode and apply required labels.

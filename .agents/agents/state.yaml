@@ -22,9 +22,7 @@ reads:
 
 syntax_validation:
   forbidden_patterns:
-    - "@solana/web3.js"
-    - "new Connection"
-    - "new Transaction"
+    - "window.localStorage"
   mandatory_patterns:
     - "create("
     - "useQuery"

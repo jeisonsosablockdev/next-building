@@ -4,7 +4,7 @@ title: STORY RFC Template
 description: Template for RFC Story — metadata, context, proposal, critique, resolution, decision, test plan, and traceability
 tags: [template, rfc, story, governance, documentation]
 timestamp: 2026-06-16T00:00:00Z
-resource: https://github.com/jeisonsosablockdev/brids/blob/develop/docs/rfcs/templates/STORY.template.md
+resource: https://github.com/jeisonsosablockdev/next-building/blob/develop/docs/rfcs/templates/STORY.template.md
 ---
 
 # STORY-<id>-<slug>
@@ -60,7 +60,7 @@ resource: https://github.com/jeisonsosablockdev/brids/blob/develop/docs/rfcs/tem
 ## Test and Validation Plan
 - Unit tests:
 - Integration tests:
-- Devnet validation (if applicable):
+- Verification evidence (if applicable):
 - Responsive QA (if applicable):
 
 ## Traceability

@@ -4,7 +4,7 @@ title: Knowledge Promotion Gitflow
 description: Knowledge Promotion Gitflow - migrated from knowledge/
 tags: [guides]
 timestamp: 2026-07-20T04:23:56Z
-resource: https://github.com/jeisonsosablockdev/brids/blob/develop/knowledge/guides/knowledge-promotion-gitflow.md
+resource: https://github.com/jeisonsosablockdev/next-building/blob/develop/knowledge/guides/knowledge-promotion-gitflow.md
 ---
 
 # Knowledge Promotion Gitflow

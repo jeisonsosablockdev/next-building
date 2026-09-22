@@ -65,7 +65,7 @@ export async function generateGraph() {
   }
 
   // 3. Scan Code Modules
-  const modules = ["app", "programs", "components", "lib", "scripts", "db"];
+  const modules = ["app", "components", "lib", "scripts", "db"];
   for (const mod of modules) {
     nodes.push({
       id: `module:${mod}`,

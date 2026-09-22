@@ -22,7 +22,7 @@
 | 3 | Generate Artifacts | Fill out the OKF Problem and Solution artifacts in the repository. |
 | 4 | Mirror Plan & Approve | Copy the exact contents of the repository's OKF Solution Artifact into `implementation_plan.md` (internal session artifact) and set `RequestFeedback: true` to request user approval. |
 | 5 | Iterate | If user rejects, update both the repository OKF file and the mirrored session `implementation_plan.md` with new details. |
-| 6 | Handoff | Once approved, proceed to downstream workflows (blockchain-cycle, frontend-cycle, etc.). |
+| 6 | Handoff | Once approved, proceed to downstream workflows (frontend-cycle, refactor-cycle, etc.). |
 
 ## Output Artifacts
 - `knowledge/features/feature-<slug>.md`

@@ -21,11 +21,11 @@ function normalizeIssueKey(rawIssueKey) {
   const value = String(rawIssueKey ?? "").trim().toUpperCase();
 
   if (!value) {
-    throw new Error("A Linear issue key is required (example: BRI-149).");
+    throw new Error("A Linear issue key is required (example: NXT-149).");
   }
 
   if (!/^[A-Z]+-\d+$/.test(value)) {
-    throw new Error(`Invalid Linear issue key: ${rawIssueKey}. Use the form BRI-149 or EPIC-011.`);
+    throw new Error(`Invalid Linear issue key: ${rawIssueKey}. Use the form NXT-149 or EPIC-011.`);
   }
 
   return value;
@@ -217,6 +217,11 @@ async function updateLinearIssueStatus({
   fetchImpl = globalThis.fetch,
   logger = console
 } = {}) {
+  if (String(process.env.LINEAR_ENABLED ?? "true").toLowerCase() === "false") {
+    logger?.info?.("ℹ️ Linear auto-status sync skipped: LINEAR_ENABLED=false.");
+    return { skipped: true, reason: "disabled" };
+  }
+
   if (!apiKey) {
     logger?.info?.("ℹ️ Linear auto-status sync skipped: LINEAR_API_KEY is not configured.");
     return { skipped: true, reason: "missing-api-key" };

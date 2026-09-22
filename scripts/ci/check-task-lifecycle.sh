@@ -33,7 +33,7 @@ CHANGED_FILES="$(
 
 CODE_CHANGES=""
 if [[ -n "${CHANGED_FILES}" ]]; then
-  CODE_CHANGES="$(echo "${CHANGED_FILES}" | grep -E '^(app/|components/|lib/|programs/|db/|scripts/|tests/|e2e/)' | grep -E -v '^(scripts/ci/check-task-lifecycle.sh|scripts/task-init.sh|scripts/git-start.sh|.agents/)' || true)"
+  CODE_CHANGES="$(echo "${CHANGED_FILES}" | grep -E '^(app/|components/|lib/|db/|scripts/|tests/|e2e/)' | grep -E -v '^(scripts/ci/check-task-lifecycle.sh|scripts/task-init.sh|scripts/git-start.sh|.agents/)' || true)"
 fi
 
 if [[ -n "${CODE_CHANGES}" ]]; then
@@ -93,7 +93,7 @@ if [[ ! -f "${STATE_FILE}" ]]; then
   cat <<'EOF' > "${STATE_FILE}"
 {
   "version": "1.0.0",
-  "task_id": "BRI-181",
+  "task_id": "NXT-101",
   "current_phase": "PHASE_7_VALIDATED",
   "phases": {
     "PHASE_1_BOOTSTRAP": { "completed": true },

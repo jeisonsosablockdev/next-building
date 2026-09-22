@@ -14,7 +14,7 @@ Open Knowledge Format catalog for security governance, threat modeling, and comp
 ## Core Security Invariants
 - **Signer Verification**: Every privileged instruction or API route must verify authorized cryptographic signers.
 - **Input Sanitization**: All external inputs must be validated with Zod/Valibot schemas before domain processing.
-- **Strict Network Boundary**: Devnet only; no testnet or unverified RPC cluster routing.
+- **Session & CSRF Invariants**: State-mutating endpoints enforce strict session validation and anti-replay guards.
 
 ## Subdirectories
 - [Threat Models](./threat-models/): Systematic threat analysis and defensive mitigations.

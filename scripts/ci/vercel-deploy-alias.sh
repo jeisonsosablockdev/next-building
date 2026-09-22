@@ -16,13 +16,20 @@ required_env "TARGET_ALIAS"
 required_env "GIT_COMMIT_REF"
 required_env "GIT_COMMIT_SHA"
 
+SCOPE_FLAG=()
+if [[ -n "${VERCEL_SCOPE:-}" ]]; then
+  SCOPE_FLAG=(--scope "${VERCEL_SCOPE}")
+elif [[ -n "${VERCEL_ORG_ID:-}" ]]; then
+  SCOPE_FLAG=(--scope "${VERCEL_ORG_ID}")
+fi
+
 echo "Deploying preview for ref '${GIT_COMMIT_REF}' at sha '${GIT_COMMIT_SHA}'..."
 
 DEPLOYMENT_URL="$(
   npx vercel@latest deploy \
     --yes \
     --token "${VERCEL_TOKEN}" \
-    --scope brids1-projects \
+    "${SCOPE_FLAG[@]}" \
     --meta githubCommitRef="${GIT_COMMIT_REF}" \
     --meta githubCommitSha="${GIT_COMMIT_SHA}" \
     --meta ciAliasTarget="${TARGET_ALIAS}"
@@ -40,9 +47,9 @@ echo "Assigning alias ${TARGET_ALIAS}..."
 
 npx vercel@latest alias set "${DEPLOYMENT_URL}" "${TARGET_ALIAS}" \
   --token "${VERCEL_TOKEN}" \
-  --scope brids1-projects
+  "${SCOPE_FLAG[@]}"
 
 echo "Inspecting ${TARGET_ALIAS}..."
 npx vercel@latest inspect "${TARGET_ALIAS}" \
   --token "${VERCEL_TOKEN}" \
-  --scope brids1-projects
+  "${SCOPE_FLAG[@]}"

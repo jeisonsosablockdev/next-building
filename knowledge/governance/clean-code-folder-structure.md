@@ -5,7 +5,7 @@
 
 ## 1. Visión General y Filosofía de Diseño
 
-Esta especificación define la estructura canónica de directorios y reglas de encapsulamiento para el monorepo **Next.js + Solana**:
+Esta especificación define la estructura canónica de directorios y reglas de encapsulamiento para el monorepo **Next.js 16+**:
 
 1. **Monorepo Workspaces (Nivel Macro)**: Organización estructurada mediante `pnpm-workspace.yaml` centrada en la aplicación web (`apps/web/`), el harness de agentes e IA (`.agents/`), los scripts de automatización (`scripts/`), la base de conocimiento (`knowledge/`) y la suite de pruebas (`tests/`).
 2. **Arquitectura Funcional en 4 Capas (Nivel Micro)**: Organización modular en `apps/web/src/` con estricto desacoplamiento y flujo unidireccional de dependencias:
@@ -35,19 +35,18 @@ Esta especificación define la estructura canónica de directorios y reglas de e
 │           │
 │           ├── components/               <-- Capa 1: Componentes UI Atómicos y Wrappers
 │           │   ├── ui/                   <-- Button, Card, Inputs
-│           │   ├── wallet/               <-- WalletConnectButton, WalletRuntimeProvider
 │           │   ├── theme/                <-- ThemeToggle
 │           │   └── motion/               <-- MotionProvider
 │           │
 │           └── lib/                      <-- Lógica Central y 4 Capas Funcionales
-│               ├── hooks/                <-- Capa 2: Custom React Hooks (useSolanaWallet)
+│               ├── hooks/                <-- Capa 2: Custom React Hooks
 │               ├── state/                <-- Capa 2: Estado del Cliente y Preferencias
 │               ├── pipelines/            <-- Capa 3: Pipelines de Dominio y Validación
-│               ├── infrastructure/       <-- Capa 4: RPC Solana Devnet & Conectores
+│               ├── infrastructure/       <-- Capa 4: Clientes HTTP, API & Conectores
 │               └── utils.ts              <-- Capa 4: Helpers de Formato y Clases
 │
 ├── .agents/                              <-- 🤖 HARNESS DE GOBERNANZA DE AGENTES
-│   ├── agents/                           <-- Definiciones de especialistas (architect, solana, qa, etc.)
+│   ├── agents/                           <-- Definiciones de especialistas (architect, frontend, qa, etc.)
 │   ├── policies/                         <-- Políticas de gobernanza no negociables
 │   ├── workflows/                        <-- Ciclos de desarrollo y macros
 │   └── hooks.json                        <-- Hooks declarativos del ciclo de vida
@@ -57,7 +56,7 @@ Esta especificación define la estructura canónica de directorios y reglas de e
 │   ├── architecture/                     <-- ADRs, diagramas de flujo y state machines
 │   ├── features/                         <-- Artefactos duales de requerimientos/soluciones
 │   ├── fixes/                            <-- Artefactos duales de resolución de bugs
-│   ├── api/                              <-- Catálogo de rutas, esquemas y RPC
+│   ├── api/                              <-- Catálogo de rutas y esquemas
 │   ├── database/                         <-- Modelos de datos y esquemas de persistencia
 │   ├── security/                         <-- Modelos de amenazas, auditorías y cumplimiento
 │   └── templates/                        <-- Plantillas canónicas para desarrollo
@@ -82,8 +81,8 @@ Esta especificación define la estructura canónica de directorios y reglas de e
    - `Layer 4 (Infraestructura)` -> No depende de ninguna capa superior.
 2. **Prohibición de Acceso a DB Directo en UI**:
    - Los componentes de presentación y hooks tienen estrictamente prohibido importar drivers de base de datos (`pg`, clientes SQL directos).
-3. **Solana Devnet Only**:
-   - Todos los conectores y configuraciones de RPC deben apuntar exclusivamente a Devnet.
+3. **Manejo Seguro de Entorno**:
+   - Las variables de entorno de cliente (`NEXT_PUBLIC_*`) deben limitarse estrictamente a valores no confidenciales.
 4. **Comentarios Obligatorios en Código**:
    - Cada archivo debe incluir encabezado de capa, bloques TSDoc/JSDoc y pasos numerados (`// Step N:`).
 5. **Estrategia de Testing Colocalizado en FDD**:
@@ -95,8 +94,8 @@ Esta especificación define la estructura canónica de directorios y reglas de e
 
 ### 4.1. Estándar Canónico de Comentarios e Indicaciones en el Código
 
-Todo artefacto de código (`.ts`, `.tsx`, `.rs`, `.sql`) debe incluir obligatoriamente:
+Todo artefacto de código (`.ts`, `.tsx`, `.sql`) debe incluir obligatoriamente:
 1. **Encabezado de Archivo / Módulo**: Declarar explícitamente el rol de capa (`Layer 1: Presentation`, `Layer 2: Application`, `Layer 3: Domain`, `Layer 4: Infrastructure`) y la descripción del archivo.
-2. **Bloques JSDoc / TSDoc / Rust doc**: Documentar exhaustivamente cada función, interfaz, tipo, hook y struct con `@param`, `@returns` y descripción de excepciones.
+2. **Bloques JSDoc / TSDoc**: Documentar exhaustivamente cada función, interfaz, tipo y hook con `@param`, `@returns` y descripción de excepciones.
 3. **Indicadores de Lógica Paso a Paso (`// Step N: ...`)**: Comentarios inline estructurados que enumeren secuencialmente cada paso de la lógica de negocio o pipeline.
 4. **Explicación de Invariantes de Seguridad y Dominio**: Comentarios claros sobre límites de confianza, validaciones de esquema y derivaciones.

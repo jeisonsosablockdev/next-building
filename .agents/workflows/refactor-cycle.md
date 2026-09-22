@@ -8,14 +8,14 @@
 
 ## Subagents
 - `planner` (You)
-- Domain specialist subagents depending on scope (`frontend`, `solana`, etc.)
+- Domain specialist subagents depending on scope (`frontend`, `api`, `db`, etc.)
 
 ## Antigravity Execution Sequence
 | Step | Goal | Gemini Action |
 | --- | --- | --- |
 | 1 | Plan Slice | Use `task.md` to map each specific, atomic refactor slice. DO NOT bundle unrelated changes. |
 | 2 | TDD Contract | Use `run_command` to add or tighten characterization tests before modifying code. |
-| 3 | Refactor | Apply clean changes with layer headers, JSDoc/Rust doc, and step-by-step commentary using `multi_replace_file_content`. |
+| 3 | Refactor | Apply clean changes with layer headers, JSDoc/TSDoc, and step-by-step commentary using `multi_replace_file_content`. |
 | 4 | QA | Run targeted tests via `run_command`. |
 | 5 | Clean Code & Comments Pass | Use `grep_search` to audit for remaining debt (naming, coupling, missing in-code commentary). |
 | 6 | Iteration | Mark slice as `[x]` in `task.md`. Start next slice. |

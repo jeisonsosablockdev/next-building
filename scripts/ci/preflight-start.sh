@@ -125,7 +125,7 @@ branch_artifact_guidance() {
   local branch_name="$1"
 
   case "${branch_name}" in
-    feature/*|security/*|nft/*|refactor/*|epic/*)
+    feature/*|security/*|refactor/*|epic/*)
       echo "- Parent work branch detected: keep /knowledge/features/*.md aligned with the parent issue and update it incrementally across SPECs."
       ;;
     fix/*|bugfix/*|hotfix/*)
@@ -150,7 +150,7 @@ branch_artifact_guidance() {
     echo "- Legacy integration branch detected: prefer the parent work branch plus SPEC model for new multi-SPEC work."
   fi
 
-  if [[ "${branch_name}" =~ ^(feature|bugfix|fix|hotfix|epic|security|nft|refactor)/[a-z0-9-]+-[A-Z]+-[0-9]+-[a-z0-9-]+$ ]]; then
+  if [[ "${branch_name}" =~ ^(feature|bugfix|fix|hotfix|epic|security|refactor)/[a-z0-9-]+-[A-Z]+-[0-9]+-[a-z0-9-]+$ ]]; then
     echo "- Parent work branch detected: PR target should be develop."
   fi
 }
@@ -334,7 +334,7 @@ elif [[ ! -f package-lock.json && -f package.json ]]; then
 fi
 
 case "${CURRENT_BRANCH}" in
-  feature/*|bugfix/*|fix/*|hotfix/*|epic/*|security/*|nft/*|refactor/*)
+  feature/*|bugfix/*|fix/*|hotfix/*|epic/*|security/*|refactor/*)
     append_action "Review AGENTS.md before implementation: non-trivial work in this branch family needs the governing artifact pair before coding."
     ;;
 esac

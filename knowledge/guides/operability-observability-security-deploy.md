@@ -4,7 +4,7 @@ title: Operability Observability Security Deploy
 description: Operability Observability Security Deploy - migrated from knowledge/
 tags: [guides]
 timestamp: 2026-07-20T04:23:56Z
-resource: https://github.com/jeisonsosablockdev/brids/blob/develop/knowledge/guides/operability-observability-security-deploy.md
+resource: https://github.com/jeisonsosablockdev/next-building/blob/develop/knowledge/guides/operability-observability-security-deploy.md
 ---
 
 # Operability Baseline (Story 010-10)
@@ -22,7 +22,7 @@ Provide a minimum production-ready baseline for observability, security hardenin
 - `R23`: Operational documentation for maintainers.
 
 ## Analytics Baseline (Privacy-Friendly)
-Client events are captured without wallet/user identifiers:
+Client events are captured without PII / user identifiers:
 - `page_view`
 - `route_change`
 - `scroll_depth`
@@ -106,15 +106,11 @@ API boundary model:
 
 ### Required Environment Variables (baseline)
 - `NEXT_PUBLIC_SITE_URL`
-- `SOLANA_RPC_URL` (devnet policy in this repository)
-- `ADMIN_WALLETS`
-- `SIWS_DOMAIN`
-- `SIWS_ORIGIN`
 
 Optional hardening envs:
 - `CSP_REPORT_ONLY`
 - `CSP_REPORT_URI`
-- `HELIUS_WEBHOOK_SECRET`
+- `WEBHOOK_SIGNING_SECRET`
 - `COMPLIANCE_INTERNAL_TOKEN`
 
 ## CI Gates

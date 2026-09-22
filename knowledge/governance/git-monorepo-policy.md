@@ -4,7 +4,7 @@ title: Git Monorepo Policy
 description: Git Monorepo Policy - migrated from knowledge/
 tags: [governance]
 timestamp: 2026-07-20T04:23:56Z
-resource: https://github.com/jeisonsosablockdev/brids/blob/develop/knowledge/governance/git-monorepo-policy.md
+resource: https://github.com/jeisonsosablockdev/next-building/blob/develop/knowledge/governance/git-monorepo-policy.md
 ---
 
 🌿 GIT GOVERNANCE + MONOREPO POLICY
@@ -17,11 +17,10 @@ resource: https://github.com/jeisonsosablockdev/brids/blob/develop/knowledge/gov
 
 Repository must follow:
 
-/programs        → Anchor programs
-/app             → Next.js frontend
-/packages        → Shared types / SDK / utils
-/tests           → Integration tests
-/scripts         → Deploy / automation
+/apps            → Next.js frontend applications (apps/web)
+/packages        → Shared packages / types / utils
+/tests           → Integration tests & harness
+/scripts         → Deploy / automation / CI
 
 Optional:
 
@@ -112,7 +111,7 @@ The issue type is established in the human-plus-agent documentation phase before
 
 Artifact-first and SPEC rule:
 	•	Non-trivial issue-type-driven work starts with an artifact before implementation.
-	•	Feature, security, nft, refactor, and epic planning use the feature-note track plus the relevant RFC traceability when applicable.
+	•	Feature, security, refactor, and epic planning use the feature-note track plus the relevant RFC traceability when applicable.
 	•	Fix, bugfix, and hotfix planning use a problem artifact plus a solution artifact under `knowledge/fixes/`.
 	•	If the solution artifact is not decision-complete, code implementation remains blocked.
 	•	The documentation/spec slice must record that `explain-like-socrates` was used before delivery slices open.
@@ -138,50 +137,49 @@ fix/<developer>-<issue>-<name>
 hotfix/<developer>-<issue>-<name>
 epic/<developer>-<issue>-<name>
 security/<developer>-<issue>-<name>
-nft/<developer>-<issue>-<name>
 refactor/<developer>-<issue>-<name>
 
 Parent work branches (Git branch name stored on the parent Linear issue):
 
 feature/<developer>-<issue>-<name>
-fix/czambrano-BRI-171-landing-copy-cleanup
-bugfix/czambrano-BRI-172-list-scroll-jump
-hotfix/czambrano-BRI-173-login-redirect-fix
-epic/czambrano-EPIC-011-admin-collections-console
+fix/jaymusicmachine-NXT-171-landing-copy-cleanup
+bugfix/jaymusicmachine-NXT-172-list-scroll-jump
+hotfix/jaymusicmachine-NXT-173-login-redirect-fix
+epic/jaymusicmachine-EPIC-011-admin-console
 
 SPEC branches (created one at a time from the parent work branch):
 
 SPEC/<developer>-<issue>-<spec-slug>
 
-BRIDS SPEC branches for feature issues intentionally split from a main `Feature` branch:
+SPEC branches for feature issues intentionally split from a main `Feature` branch:
 
-SPEC/<developer>-bri-<id>-specNN-<spec-slug>
+SPEC/<developer>-<issue>-specNN-<spec-slug>
 
 Ejemplo:
 
-SPEC/czambrano-bri-168-spec01-landing-dark-hero-look-and-feel
+SPEC/jaymusicmachine-nxt-168-spec01-landing-dark-hero-look-and-feel
 
 Política de rama transversal:
-Toda documentación, SPEC o cambio de implementación (por ejemplo, relacionado con BRI-168) debe vivir primero en la rama principal `feature/<developer>-bri-<id>-<name>` y mantenerse congruente con el cuerpo del issue en Linear.
+Toda documentación, SPEC o cambio de implementación (por ejemplo, relacionado con NXT-168) debe vivir primero en la rama principal `feature/<developer>-<issue>-<name>` y mantenerse congruente con el cuerpo del issue en Linear.
 La rama `Feature` principal se divide en múltiples ramas `SPEC`, desarrolladas una por una según estabilidad, dependencia técnica y prioridad del producto. El orden numérico (specNN) ayuda a organizar el scope, pero no obliga a ejecutar los SPECS en ese orden si la estabilidad del producto recomienda otra secuencia. Cada rama SPEC debe partir desde la rama `Feature` principal y volver a ella para revisión. El cierre completo del bloque debe integrarse desde la rama `Feature` principal hacia la rama base definida por el flujo del proyecto.
 
 Rules:
-	•	**Ownership & Template Protocol:** Antes de escribir código, el desarrollador asignado (`czambrano` o `Jeison Sosa`) debe estar declarado en el bloque `Ownership` del issue en Linear y en su respectivo artefacto Markdown (`Human Brief` template).
-	•	Use the lowercase Linear issue key in branch names (example: `bri-149`).
+	•	**Ownership & Template Protocol:** Antes de escribir código, el desarrollador asignado (declarado en `.agents/hooks.json` o configurado mediante `pnpm setup`) debe estar declarado en el bloque `Ownership` del issue en Linear y en su respectivo artefacto Markdown (`Human Brief` template).
+	•	Use the lowercase Linear issue key in branch names (example: `nxt-149`).
 	•	`-sNN-` is the zero-padded slice order from the parent issue Markdown table.
 	•	For `SPEC/*` branches, `specNN` is the zero-padded SPEC number from the parent issue body, and the number organizes scope rather than mandatory execution priority.
 	•	Linear initiative branches start from latest `develop`.
 	•	The Linear initiative branch name must match the parent issue `git branch name` field.
 	•	Slice branches start from the Linear initiative branch, not directly from `develop`.
 	•	`SPEC DEVELOPMENT HISTORY`: Es un registro obligatorio al final del issue de Linear para documentar por SPEC los patrones, decisiones y resultados que quedaron estables.
-	•	For BRIDS SPEC branches, `SPEC MERGE` is the internal merge from `SPEC/*` back into the issue `Feature` branch and does not require a PR.
+	•	For SPEC branches, `SPEC MERGE` is the internal merge from `SPEC/*` back into the issue `Feature` branch and does not require a PR.
 	•	The Feature branch still requires the project-defined PR before integration into the base branch.
 
 Examples:
 
-feature/czambrano-BRI-149-staking-architecture
+feature/jaymusicmachine-NXT-149-dashboard-architecture
 feature/<developer>-<issue>-<name>
-epic/czambrano-EPIC-011-admin-collections-console
+epic/jaymusicmachine-EPIC-011-admin-console
 SPEC/<developer>-<issue>-<spec-slug>
 
 ⸻
@@ -197,9 +195,7 @@ SPEC/<developer>-<issue>-<spec-slug>
 	7.	**Final PR**: Open the final parent work branch PR from the parent work branch into `develop`.
 	8.	**Cleanup**: Delete the temporary parent work branch after the final merge.
 
-⸻
-
-🔀 BRIDS SPEC MERGE FLOW (MANDATORY WHEN USING SPEC/* BRANCHES)
+🔀 SPEC MERGE FLOW (MANDATORY WHEN USING SPEC/* BRANCHES)
 
 VERSION ESPAÑOL
 
@@ -225,42 +221,13 @@ ENGLISH VERSION
 
 ⸻
 
-🔀 BRIDS SPEC MERGE FLOW (MANDATORY WHEN USING SPEC/* BRANCHES)
-
-VERSION ESPAÑOL
-
-	1.	Confirmar que el desarrollador responsable y el SPEC destino están definidos.
-	2.	Actualizar `SPEC HISTORY` en el documento del Feature, el documento del SPEC y el documento de implementación.
-	3.	Sincronizar el cuerpo del issue de Linear como fuente principal.
-	4.	Ejecutar validaciones razonables según el alcance tocado.
-	5.	Revisar `git status` y separar cambios ajenos al SPEC.
-	6.	Integrar la rama `SPEC/*` hacia la rama `Feature` del issue.
-	7.	Dejar la rama `Feature` lista para continuar con el siguiente SPEC.
-	8.	No crear PR para el merge interno `SPEC/*` → `Feature`; el PR corresponde al cierre de la rama `Feature`.
-
-ENGLISH VERSION
-
-	1.	Confirm that the responsible developer and target SPEC are defined.
-	2.	Update `SPEC HISTORY` in the Feature document, SPEC document, and implementation document.
-	3.	Sync the Linear issue body as the primary source.
-	4.	Run reasonable validations for the touched scope.
-	5.	Review `git status` and separate changes unrelated to the SPEC.
-	6.	Integrate the `SPEC/*` branch into the issue `Feature` branch.
-	7.	Leave the `Feature` branch ready for the next SPEC.
-	8.	Do not create a PR for the internal `SPEC/*` → `Feature` merge; the PR belongs to the Feature branch closure.
-
-⸻
-
 🔄 PATH-AWARE EXECUTION RULE (CRITICAL)
 
 Agent must detect affected folders and automatically invoke proper macro.
 
 If changes touch:
-	•	/programs → run @blockchain-cycle
 	•	/app → run @frontend-cycle
 	•	/packages → run strict shared validation
-	•	NFT logic → also run @nft-cycle
-	•	Major release → run @mainnet-hardening
 
 If multiple areas are affected → run ALL relevant cycles.
 
@@ -275,7 +242,6 @@ If modifying shared code:
 	2.	No circular dependencies.
 	3.	Must pass full repo type-check.
 	4.	Must run:
-	•	typescript-expert
 	•	clean-code
 	•	lint-and-validate
 	5.	Version bump required (semver discipline).
@@ -293,14 +259,14 @@ Before creating PR:
 
 PR must include:
 	•	Clear description
-	•	Devnet transaction proof (if blockchain change)
+	•	Verification evidence
 	•	Security impact analysis
 	•	Screenshots (if frontend change)
 	•	Issue reference
 	•	RFC reference (if applicable)
 	•	Risk analysis section
 	•	Rollback plan section
-	•	Feature note path under `/docs/features/*.md` for small/iterative feature/security/refactor/nft/epic product changes
+	•	Feature note path under `/docs/features/*.md` for small/iterative feature/security/refactor/epic product changes
 	•	Fix note path under `/docs/fixes/*.md` for fix/bugfix/hotfix product changes
 	•	For SPEC PRs, the SPEC id and parent work branch reference
 
@@ -329,7 +295,7 @@ Every PR targeting `develop` must pass:
 	•	one `scope:*`
 	•	one `type:*`
 	•	one `risk:*`
-	5.	PR body policy check (Issue, RFC, Risks, Rollback Plan, Devnet Proof, Human Acceptance)
+	5.	PR body policy check (Issue, RFC, Risks, Rollback Plan, Verification Evidence, Human Acceptance)
 	6.	PR size policy:
 	•	Target <= 400 added lines
 	•	If larger, split into sequential PRs and use feature flags
@@ -344,16 +310,12 @@ If any governance gate fails, merge must be blocked.
 🚀 MONOREPO CI POLICY (MANDATORY CHECKS)
 
 Every PR must:
-	1.	Build Anchor programs
-	2.	Deploy to devnet
-	3.	Execute real on-chain tests
-	4.	Confirm transaction signatures
-	5.	Fetch real devnet state
-	6.	Build Next.js app
-	7.	Full repo type-check
-	8.	Lint entire repo
-	9.	Run DB migration validation against clean Postgres when schema or persistence work is in scope
-	10.	Run security scans
+	1.	Build Next.js app (`pnpm build`)
+	2.	Full repo type-check (`pnpm type-check`)
+	3.	Lint entire repo (`pnpm lint`)
+	4.	Run automated test suites (`pnpm test`)
+	5.	Run DB migration validation against clean Postgres when schema or persistence work is in scope (`pnpm validate:db`)
+	6.	Run security and license scans (`pnpm check:licenses`)
 
 If any fails → block merge.
 

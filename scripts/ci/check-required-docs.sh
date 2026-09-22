@@ -109,9 +109,7 @@ require_docs_changed() {
   return "${missing}"
 }
 
-touches_program=0
 touches_app=0
-touches_nft=0
 touches_product_code=0
 missing_any=0
 resolve_spec_parent_work_branch() {
@@ -268,30 +266,12 @@ validate_epic_readme_story_row() {
   echo "RFC epic Story Index validation passed for STORY-${epic_id}-${story_id}"
 }
 
-if has_changed '^programs/'; then
-  touches_program=1
-fi
-
-if has_changed '^app/'; then
+if has_changed '^apps/' || has_changed '^app/'; then
   touches_app=1
 fi
 
-if has_changed '^(app|programs|packages|lib|tests|e2e)/'; then
+if has_changed '^(app|apps|packages|lib|tests|e2e)/'; then
   touches_product_code=1
-fi
-
-if has_changed '^(programs|app|lib|packages|tests|e2e)/.*(nft|mint|metaplex|candy|asset)'; then
-  touches_nft=1
-fi
-
-if [[ "${touches_program}" -eq 1 ]]; then
-  echo "Program scope detected -> validating required blockchain docs."
-  require_docs_changed "program" \
-    "knowledge/architecture/architecture-overview.md" \
-    "knowledge/architecture/authority-model.md" \
-    "knowledge/architecture/state-machine.md" \
-    "knowledge/architecture/threat-model.md" \
-    "knowledge/architecture/devnet-proof.md" || missing_any=1
 fi
 
 if [[ "${touches_app}" -eq 1 ]]; then
@@ -299,12 +279,6 @@ if [[ "${touches_app}" -eq 1 ]]; then
   require_docs_changed "app" \
     "knowledge/architecture/auth-flow.md" \
     "knowledge/architecture/session-model.md" || missing_any=1
-fi
-
-if [[ "${touches_nft}" -eq 1 ]]; then
-  echo "NFT scope detected -> validating required NFT docs."
-  require_docs_changed "nft" \
-    "knowledge/architecture/nft-spec.md" || missing_any=1
 fi
 
 requires_feature_artifact_pair=0
@@ -329,7 +303,7 @@ if [[ "${touches_product_code}" -eq 1 ]]; then
     fi
   fi
 
-  if [[ "${branch_for_artifact_checks}" =~ ^(feature|security|nft|refactor|epic)/ ]]; then
+  if [[ "${branch_for_artifact_checks}" =~ ^(feature|security|refactor|epic)/ ]]; then
     requires_feature_artifact_pair=1
   fi
   if [[ "${branch_for_artifact_checks}" =~ ^(fix|bugfix|hotfix)/ ]]; then
@@ -341,7 +315,7 @@ if [[ "${touches_product_code}" -eq 1 ]]; then
 fi
 
 if [[ "${requires_feature_artifact_pair}" -eq 1 ]]; then
-  echo "Feature/security/nft/refactor/epic scope detected -> validating feature artifacts under knowledge/features."
+  echo "Feature/security/refactor/epic scope detected -> validating feature artifacts under knowledge/features."
   feature_problem_artifacts="$(changed_files_match '^knowledge/features/feature-.*\.md$' | grep -E -v -- '-implementation\.md$' || true)"
   feature_solution_artifacts="$(changed_files_match '^knowledge/features/feature-.*-implementation\.md$')"
 

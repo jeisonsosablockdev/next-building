@@ -24,14 +24,8 @@ detect_scope() {
   
   # Determine workflow based on paths
   local workflow=""
-  if echo "$changed_files" | grep -qE '^(/app|components/)'; then
+  if echo "$changed_files" | grep -qE '^(app/|apps/|components/)'; then
     workflow="frontend-cycle"
-  fi
-  if echo "$changed_files" | grep -qE '^(/programs/)'; then
-    workflow="blockchain-cycle"
-  fi
-  if echo "$changed_files" | grep -qE '(nft|mint|metaplex|candy)'; then
-    workflow="${workflow:-nft-cycle}"
   fi
   if echo "$changed_files" | grep -qE '^(scripts/db-|lib/db|db/)'; then
     workflow="${workflow:-db}"
@@ -60,7 +54,7 @@ verify_preconditions() {
   echo "🔍 Verifying AGENTS.md Entry Rule preconditions..."
   
   # Check for Linear issue if non-trivial work
-  if git diff --name-only HEAD | grep -qE '^(feature|fix|security|nft|refactor)/'; then
+  if git diff --name-only HEAD | grep -qE '^(feature|fix|security|refactor)/'; then
     echo "  ⚠️  Non-trivial work detected - Linear issue/artifact required"
     echo "     Ensure governing artifact exists before implementation"
   fi

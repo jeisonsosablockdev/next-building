@@ -4,7 +4,7 @@ title: Security Quality Policy
 description: Security Quality Policy - migrated from knowledge/
 tags: [governance]
 timestamp: 2026-07-20T04:23:56Z
-resource: https://github.com/jeisonsosablockdev/brids/blob/develop/knowledge/governance/security-quality-policy.md
+resource: https://github.com/jeisonsosablockdev/next-building/blob/develop/knowledge/governance/security-quality-policy.md
 ---
 
 🔴 SECURITY + QUALITY POLICY
@@ -54,15 +54,13 @@ Rules:
 
 ⸻
 
-🏁 PRE-MAINNET CHECKLIST
-	•	All Anchor tests executed on devnet.
-	•	All transactions confirmed on-chain.
-	•	Authority model verified.
-	•	No unchecked accounts.
-	•	No unsafe CPIs.
-	•	No floating point math.
-	•	No unchecked signer assumptions.
-	•	All frontend auth verified server-side.
+🏁 PRODUCTION RELEASE CHECKLIST
+	•	Full test suite passes cleanly (`pnpm test`).
+	•	Full repo type-check and lint pass cleanly (`pnpm type-check`, `pnpm lint`).
+	•	Next.js application builds without errors or warnings (`pnpm build`).
+	•	All DB migrations applied and validated (`pnpm validate:db`).
+	•	All frontend auth verified server-side with CSRF / anti-replay protections.
+	•	Zero secret keys or private credentials exposed to client bundles.
 	•	Replay protection validated.
 	•	Clean code standards enforced.
 	•	No warnings in build output.
@@ -70,46 +68,19 @@ Rules:
 
 ⸻
 
-🔐 MONOREPO SECURITY RULES
+🔐 APPLICATION SECURITY RULES
 
-If change affects /programs:
-	•	Validate authority model
-	•	Validate signer checks
-	•	Validate PDA derivations
-	•	Prefer Solana Developer MCP tools over model memory for Solana-specific decisions.
-	•	Use `list_sections` first for non-trivial Solana questions, then select the matching documentation source ids or section ids.
-	•	Use `get_documentation` for canonical docs on a specific Solana source, framework, library, or ecosystem area.
-	•	Use `Solana_Documentation_Search` or `Solana_Expert__Ask_For_Help` for narrow how-to questions, errors, or API usage.
-	•	When writing or modifying Solana program Rust, run `program_autofixer` before returning code, apply the fixes, and repeat until `require_another_tool_call_after_fixing` is false.
-	•	Ensure test stack is present in program manifests:
-	  `cargo add --dev litesvm mollusk-svm mollusk-svm-programs-token proptest`
-	•	No unchecked CPIs
-	•	No floating point arithmetic
-	•	Must provide real devnet tx proof
-
-If change affects /app:
-	•	Server-side signature verification mandatory
-	•	Replay protection validated
+If change affects /app or /apps/web:
+	•	Server-side session verification mandatory
+	•	CSRF and replay protection validated
 	•	No client authority trust
-	•	Devnet RPC enforced
-
-If change affects NFT logic:
-	•	Validate mint authority
-	•	Validate update authority
-	•	Validate metadata owner
-	•	Validate seller fee basis points
-	•	Confirm metadata account on devnet
+	•	Validate input payloads using Zod or Valibot schemas before processing
 
 ⸻
 
 🧬 DEVELOPMENT PHILOSOPHY
-	•	Devnet-first execution.
-	•	Zero simulation as final blockchain acceptance evidence.
-	•	Zero mocked blockchain RPC, signatures, accounts, balances, or on-chain data as final acceptance evidence.
-	•	Application-layer mocks remain allowed for non-blockchain tests when they do not replace required devnet execution proof.
-	•	Real signatures only.
 	•	Clean Code always: Mandatory in-code commentary, layer header annotations, and step-by-step logic indicators.
-	•	Security before features: All security invariants, PDA derivations, authority guards, and replay protections must be documented inline.
+	•	Security before features: All security invariants, session checks, and authority guards must be documented inline.
 	•	Deterministic state transitions.
 	•	Minimal trust surface.
 	•	Explicit authority validation.

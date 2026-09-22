@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # scripts/ci/check-layered-architecture.sh
 #
-# Validates 4-layer architecture compliance for Solana & Next.js per architect.yaml.
+# Validates 4-layer architecture compliance for Next.js per architect.yaml.
 # Exits 1 if forbidden imports or layer boundary violations are detected.
 
 set -euo pipefail

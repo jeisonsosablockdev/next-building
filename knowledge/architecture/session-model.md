@@ -15,3 +15,5 @@ resource: local
 ## Session Invariants
 - Cookies must specify `httpOnly: true`, `secure: true`, and `sameSite: "lax"`.
 - Role verification must occur server-side with zero reliance on client-provided claims.
+
+Last Updated: 2026-09-21 04:26:52 UTC

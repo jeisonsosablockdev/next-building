@@ -12,7 +12,6 @@ pnpm-debug.log*
 playwright-report
 test-results
 .blob-report
-.cache-synpress
 .npm-cache
 .vercel
 .env*.local
@@ -24,10 +23,8 @@ PR_BODY.md
 .github/pr-body.md
 opencode.json
 .agents/pr_last_run.json
+.agents/project_config.json
 *.tsbuildinfo
-target
-**/target
-programs/**/target
 .tmp.driveupload
 **/.tmp.driveupload
 

@@ -1,13 +1,13 @@
 ---
 type: ADR
-title: Architecture Overview — Feature-Driven Design (FDD) & 4-Layer Functional Web3
-description: Canonical architectural blueprint combining Feature-Driven Design (Vertical Slices) with strict 4-Layer Functional Web3 separation for Next.js and Solana.
-tags: [architecture, fdd, feature-driven-design, 4-layers, nextjs, solana]
+title: Architecture Overview — Feature-Driven Design (FDD) & 4-Layer Functional Architecture
+description: Canonical architectural blueprint combining Feature-Driven Design (Vertical Slices) with strict 4-Layer Functional Architecture separation for Next.js 16+.
+tags: [architecture, fdd, feature-driven-design, 4-layers, nextjs]
 timestamp: 2026-08-23T00:00:00Z
 resource: local
 ---
 
-# Architecture Overview — Feature-Driven Design (FDD) & 4-Layer Functional Web3
+# Architecture Overview — Feature-Driven Design (FDD) & 4-Layer Functional Architecture
 
 ## 1. Visión General y Filosofía de Diseño
 
@@ -38,7 +38,7 @@ graph TD
     SHARED_COMP["src/components/ (Componentes UI Atómicos)"]
     SHARED_L2["src/lib/hooks & state (Hooks globales)"]
     SHARED_L3["src/lib/pipelines (Pipelines transversales)"]
-    SHARED_L4["src/lib/infrastructure (RPC Devnet, Utils)"]
+    SHARED_L4["src/lib/infrastructure (HTTP/API, Utils)"]
   end
 
   ROUTER --> F_PUB
@@ -67,10 +67,10 @@ Dentro de cada feature (y en el código compartido de `src/lib/`), la lógica se
 
 | Capa | Ubicación | Responsabilidad | Importaciones Permitidas | Prohibiciones Estrictas |
 | :--- | :--- | :--- | :--- | :--- |
-| **Capa 1: Presentación** | `app/`, `components/`, `features/*/presentation/` | UI React pura, layouts, accesibilidad, Motion 12, triggers de wallet modal. | Capa 2, Capa 3, UI Compartida | ❌ **PROHIBIDO** importar bases de datos (`pg`), SDKs de transporte raw o construir transacciones imperativas. |
-| **Capa 2: Aplicación / Consumo** | `lib/hooks/`, `lib/state/`, `features/*/application/` | Hooks reactivos (`useSolanaWallet`), DTOs, mutaciones de estado del cliente (Zustand, React Query). | Capa 3, Capa 4, React Hooks | ❌ **PROHIBIDO** renderizar JSX directo (solo lógica reactiva y estado). |
-| **Capa 3: Dominio / Pipelines** | `lib/pipelines/`, `features/*/domain/` | Pipelines funcionales puros de construcción de transacciones (`pipe()`, `@solana/kit`), validaciones (Zod / Valibot) e invariantes. | Capa 4, SDKs puros, Zod/Valibot | ❌ **PROHIBIDO** importar React, `next/navigation` o cualquier acoplamiento al framework de UI. |
-| **Capa 4: Infraestructura** | `lib/infrastructure/`, `features/*/infrastructure/`, `lib/utils.ts` | Conexión RPC a Solana Devnet, generadores de enlaces a Solscan, conectores externos, helpers puros de formato. | SDKs de transporte, APIs externas | ❌ **PROHIBIDO** importar componentes visuales o hooks de UI. |
+| **Capa 1: Presentación** | `app/`, `components/`, `features/*/presentation/` | UI React pura, layouts, accesibilidad, Motion 12, Server & Client Components. | Capa 2, Capa 3, UI Compartida | ❌ **PROHIBIDO** importar bases de datos (`pg`), SDKs de transporte raw o lógica de persistencia. |
+| **Capa 2: Aplicación / Consumo** | `lib/hooks/`, `lib/state/`, `features/*/application/` | Hooks reactivos, DTOs, mutaciones de estado del cliente (Zustand, React Query). | Capa 3, Capa 4, React Hooks | ❌ **PROHIBIDO** renderizar JSX directo (solo lógica reactiva y estado). |
+| **Capa 3: Dominio / Pipelines** | `lib/pipelines/`, `features/*/domain/` | Pipelines funcionales puros de negocio (`pipe()`), validaciones (Zod / Valibot) e invariantes de dominio. | Capa 4, SDKs puros, Zod/Valibot | ❌ **PROHIBIDO** importar React, `next/navigation` o cualquier acoplamiento al framework de UI. |
+| **Capa 4: Infraestructura** | `lib/infrastructure/`, `features/*/infrastructure/`, `lib/utils.ts` | Conexión HTTP/API, repositorios de base de datos, servicios cloud, helpers puros de formato. | SDKs de transporte, APIs externas | ❌ **PROHIBIDO** importar componentes visuales o hooks de UI. |
 
 ---
 
@@ -93,7 +93,7 @@ apps/web/src/features/[feature_name]/
 │   ├── [feature]-pipeline.ts
 │   ├── [feature]-pipeline.test.ts <-- 🧪 Test colocalizado de lógica/pipeline
 │   └── [feature]-schema.ts
-└── infrastructure/               <-- Capa 4: Adaptadores de RPC y servicios externos
+└── infrastructure/               <-- Capa 4: Adaptadores de API y servicios externos
     ├── [feature]-adapter.ts
     └── [feature]-adapter.test.ts <-- 🧪 Test colocalizado de adaptador
 ```
@@ -112,7 +112,7 @@ apps/web/src/features/[feature_name]/
 
 1. **Flujo Unidireccional**: Capa 1 -> Capa 2 -> Capa 3 -> Capa 4. Las dependencias nunca fluyen hacia arriba.
 2. **Encapsulamiento FDD**: Prohibido importar rutas internas de otra feature (ej. `import from '@/features/auth/domain/internal'` ❌). Solo se importa desde `@/features/auth` ✅.
-3. **Solana Devnet Only**: Todas las interacciones blockchain deben apuntar exclusivamente a Devnet con transacciones y firmas reales.
+3. **Validación Estricta de Esquemas**: Toda entrada externa o payload de API debe validarse mediante Zod o Valibot antes de su procesamiento.
 4. **Double Gatekeeper Protocol**:
    - **Gate 1**: El agente `architect` inspecciona y aprueba el diseño de capas en el *Solution Spec* antes de programar.
    - **Gate 2**: El agente `architect` audita el diff generado, verificando aislamiento de capas, ausencia de clases imperativas y presencia de comentarios.

@@ -20,7 +20,7 @@ elif [[ "$BRANCH" =~ ^SPEC/ ]]; then
   else
     echo "🧩 Siguiente paso: abrir PR desde '$BRANCH' hacia la parent work branch configurada."
   fi
-elif [[ "$BRANCH" =~ ^(feature|bugfix|fix|hotfix|epic|security|nft|refactor)/[a-z0-9-]+-[A-Z]+-[0-9]+-[a-z0-9-]+$ ]]; then
+elif [[ "$BRANCH" =~ ^(feature|bugfix|fix|hotfix|epic|security|refactor)/[a-z0-9-]+-[A-Z]+-[0-9]+-[a-z0-9-]+$ ]]; then
   echo "🧭 Siguiente paso: abrir PR desde '$BRANCH' hacia 'develop'."
 elif [[ "$BRANCH" =~ ^initiative/ ]]; then
   echo "🧭 Rama legacy de initiative detectada. Siguiente paso: abrir PR desde '$BRANCH' hacia 'develop'."

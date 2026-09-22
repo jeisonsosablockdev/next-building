@@ -50,7 +50,6 @@ function inferTitle(relPath: string): string {
   return name
     .replace(/-/g, ' ')
     .replace(/\b\w/g, c => c.toUpperCase())
-    .replace(/Bri/gi, 'BRI-')
     .replace(/Epic/gi, 'EPIC-')
     .replace(/Story/gi, 'STORY-');
 }
@@ -74,7 +73,7 @@ title: ${title}
 description: ${title} - migrated from knowledge/
 tags: [${rel.split('/')[0]}]
 timestamp: ${now}
-resource: https://github.com/jeisonsosablockdev/brids/blob/develop/knowledge/${rel}
+resource: https://github.com/jeisonsosablockdev/next-building/blob/develop/knowledge/${rel}
 ---
 
 `;

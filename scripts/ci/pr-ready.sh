@@ -155,7 +155,7 @@ echo "5) PR metadata checklist (manual before opening PR):"
 echo "- Add exactly one scope label (scope:*)"
 echo "- Add exactly one type label (type:*)"
 echo "- Add exactly one risk label (risk:*)"
-echo "- Fill PR template sections: Issue, RFC, Riesgos, Rollback Plan, Prueba Devnet, Human Acceptance"
+echo "- Fill PR template sections: Issue, RFC, Riesgos, Rollback Plan, Verification Evidence, Human Acceptance"
 echo "- If branch touches qualifying product code, update the required artifact pair for that branch family"
 echo "- For multi-SPEC work, confirm the previous SPEC merged into the parent work branch before opening the next SPEC"
 

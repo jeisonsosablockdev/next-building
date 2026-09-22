@@ -4,7 +4,7 @@ title: PR Policy Source of Truth
 description: Machine-readable PR governance rules — labels, required sections, thresholds, patterns, and canonical commands
 tags: [governance, pr, policy, labels, validation, ci, human-acceptance]
 timestamp: 2026-06-16T00:00:00Z
-resource: https://github.com/jeisonsosablockdev/brids/blob/develop/docs/governance/pr-policy-source-of-truth.json
+resource: https://github.com/jeisonsosablockdev/next-building/blob/develop/docs/governance/pr-policy-source-of-truth.json
 ---
 
 # PR Policy Source of Truth
@@ -14,7 +14,7 @@ This document describes the machine-readable PR policy at [`pr-policy-source-of-
 ## Policy Summary
 
 ### Labels
-- **Scope**: `scope:app`, `scope:program`, `scope:shared`, `scope:docs`, `scope:infra`, `scope:nft`
+- **Scope**: `scope:app`, `scope:api`, `scope:db`, `scope:shared`, `scope:docs`, `scope:infra`
 - **Type**: `type:feature`, `type:fix`, `type:security`, `type:refactor`, `type:chore`, `type:docs`
 - **Risk**: `risk:low`, `risk:medium`, `risk:high`
 - **Exemptions**: `size-exempt`, `branch-age-exempt`
@@ -24,7 +24,7 @@ This document describes the machine-readable PR policy at [`pr-policy-source-of-
 2. RFC reference
 3. Riesgos (Risk Analysis)
 4. Rollback Plan
-5. Prueba Devnet (Devnet Proof)
+5. Verificacion (Verification Evidence)
 6. Human Acceptance
 
 ### Thresholds
@@ -34,7 +34,7 @@ This document describes the machine-readable PR policy at [`pr-policy-source-of-
 ### Patterns
 - Feature Flag: `feature[- ]flag`
 - Human Acceptance Approved: `## Human Acceptance` with `Status: approved`
-- Commit Message: Conventional commits with scope `(app|program|shared|docs|infra|security|nft)`
+- Commit Message: Conventional commits with scope `(app|api|db|shared|docs|infra|security)`
 
 ### Canonical Commands
 - Preflight: `npm run pr:ready`

@@ -16,7 +16,7 @@ describe('06 - PR Governance & Automated Post-Acceptance PR Workflow', () => {
 Added new feature slice.
 
 ## Issue
-BRI-184
+NXT-184
       `.trim();
 
       sandbox.createFile('pr-body.md', invalidPrBody);
@@ -42,7 +42,7 @@ BRI-184
 Added new feature slice.
 
 ## Issue
-[BRI-184](https://linear.app/brids-app/issue/BRI-184/test-suite-for-harnessing)
+[NXT-184](https://linear.app/next-building/issue/NXT-184/test-suite-for-harnessing)
 
 ## RFC
 RFC-015
@@ -53,8 +53,8 @@ Low risk infrastructure addition.
 ## Rollback Plan
 Revert commit.
 
-## Prueba Devnet
-N/A infrastructure tool test.
+## Verificacion
+Verified with pnpm test and pnpm build.
 
 ## Human Acceptance
 Status: approved

@@ -3,11 +3,9 @@
   "labels": {
     "scope": [
       "scope:app",
-      "scope:program",
       "scope:shared",
       "scope:docs",
-      "scope:infra",
-      "scope:nft"
+      "scope:infra"
     ],
     "type": [
       "type:feature",
@@ -30,7 +28,7 @@
     "rfc",
     "riesgos",
     "rollback plan",
-    "prueba devnet",
+    "verificacion",
     "human acceptance"
   ],
   "thresholds": {
@@ -40,7 +38,7 @@
   "patterns": {
     "featureFlag": "feature[- ]flag",
     "humanAcceptanceApproved": "##\\s*human acceptance[\\s\\S]*status:\\s*approved",
-    "commitMessage": "^(Merge (branch|pull request)|(feat|fix|docs|chore|refactor|security|nft|test|ci|merge)(\\([a-zA-Z0-9_,.-]+\\))?: .+)"
+    "commitMessage": "^(Merge (branch|pull request)|(feat|fix|docs|chore|refactor|security|test|ci|merge)(\\([a-zA-Z0-9_,.-]+\\))?: .+)"
   },
   "canonicalCommands": {
     "preflight": "npm run pr:ready",

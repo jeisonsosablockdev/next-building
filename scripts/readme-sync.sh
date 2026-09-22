@@ -11,7 +11,7 @@ END_MARKER="<!-- DOCS-AUTO:END -->"
 
 if [[ ! -f "$README_FILE" ]]; then
   cat > "$README_FILE" <<'BASE'
-# BRIDS
+# Next.js Monorepo Starter
 
 This README includes an auto-generated snapshot of project documentation.
 
@@ -25,14 +25,11 @@ generated_at="$(date -u +"%Y-%m-%d %H:%M:%S UTC")"
 collect_scope() {
   local name="$1"
   case "$name" in
-    architecture.md|authority-model.md|state-machine.md|threat-model.md|devnet-proof.md)
-      echo "blockchain"
+    architecture-overview.md|authority-model.md|state-machine.md|threat-model.md)
+      echo "architecture"
       ;;
     auth-flow.md|session-model.md)
       echo "frontend/auth"
-      ;;
-    nft-spec.md)
-      echo "nft"
       ;;
     *)
       echo "general"
@@ -74,9 +71,8 @@ collect_scope() {
 
   echo
   echo "### Required Docs by Change Type"
-  echo '- Blockchain (/programs): `knowledge/architecture/architecture-overview.md`, `knowledge/architecture/authority-model.md`, `knowledge/architecture/state-machine.md`, `knowledge/architecture/threat-model.md`, `knowledge/architecture/devnet-proof.md`'
   echo '- Frontend/Auth (/app): `knowledge/architecture/auth-flow.md`, `knowledge/architecture/session-model.md`'
-  echo '- NFT features: `knowledge/architecture/nft-spec.md`'
+  echo '- Architecture & Governance: `knowledge/architecture/architecture-overview.md`'
 } > "$TMP_BLOCK"
 
 if grep -q "$START_MARKER" "$README_FILE" && grep -q "$END_MARKER" "$README_FILE"; then

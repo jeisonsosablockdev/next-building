@@ -3,9 +3,9 @@ set -euo pipefail
 
 if [[ $# -lt 1 ]]; then
   echo "Uso: ./scripts/docs-sync.sh <scope-list>"
-  echo "Ej:  ./scripts/docs-sync.sh program"
-  echo "Ej:  ./scripts/docs-sync.sh app,nft"
-  echo "Scopes válidos: program, app, nft"
+  echo "Ej:  ./scripts/docs-sync.sh app"
+  echo "Ej:  ./scripts/docs-sync.sh app,api"
+  echo "Scopes válidos: app, api"
   exit 1
 fi
 
@@ -51,27 +51,20 @@ ensure_file() {
 
 for scope in "${SCOPES[@]}"; do
   case "$scope" in
-    program)
-      ensure_file "$DOCS_DIR/architecture-overview.md" "Architecture"
-      ensure_file "$DOCS_DIR/authority-model.md" "Authority Model"
-      ensure_file "$DOCS_DIR/state-machine.md" "State Machine"
-      ensure_file "$DOCS_DIR/threat-model.md" "Threat Model"
-      ensure_file "$DOCS_DIR/devnet-proof.md" "Devnet Proof"
-      ;;
     app)
-      ensure_file "$DOCS_DIR/auth-flow.md" "Auth Flow (SIWS)"
+      ensure_file "$DOCS_DIR/auth-flow.md" "Auth Flow"
       ensure_file "$DOCS_DIR/session-model.md" "Session Model"
       ;;
-    nft)
-      ensure_file "$DOCS_DIR/nft-spec.md" "NFT Spec"
+    api)
+      ensure_file "$DOCS_DIR/architecture-overview.md" "Architecture"
+      ensure_file "$DOCS_DIR/threat-model.md" "Threat Model"
       ;;
     *)
       echo "Scope inválido: $scope"
-      echo "Scopes válidos: program, app, nft"
+      echo "Scopes válidos: app, api"
       exit 1
       ;;
   esac
-
 done
 
 "$(dirname "$0")/readme-sync.sh"

@@ -48,7 +48,7 @@ if [[ -z "${MSG}" ]]; then
 fi
 
 if [[ -z "${SCOPE}" ]]; then
-  if [[ "${CURRENT_BRANCH}" =~ ^(feature|bugfix|fix|hotfix|epic|security|nft|refactor|docs|chore)/([a-z]+)- ]]; then
+  if [[ "${CURRENT_BRANCH}" =~ ^(feature|bugfix|fix|hotfix|epic|security|refactor|docs|chore)/([a-z]+)- ]]; then
     SCOPE="${BASH_REMATCH[2]}"
   fi
 fi
@@ -89,9 +89,9 @@ run_quality_gates() {
 
 run_quality_gates
 
-if [[ ! "${SCOPE}" =~ ^(app|program|shared|docs|infra|security|nft)$ ]]; then
+if [[ ! "${SCOPE}" =~ ^(app|shared|docs|infra|security)$ ]]; then
   echo "❌ Scope inválido para commit convencional: ${SCOPE}"
-  echo "Scopes válidos: app, program, shared, docs, infra, security, nft"
+  echo "Scopes válidos: app, shared, docs, infra, security"
   exit 1
 fi
 
@@ -117,9 +117,6 @@ case "${CURRENT_BRANCH}" in
     ;;
   refactor/*)
     COMMIT_TYPE="refactor"
-    ;;
-  nft/*)
-    COMMIT_TYPE="nft"
     ;;
   knowledge/*)
     COMMIT_TYPE="docs"

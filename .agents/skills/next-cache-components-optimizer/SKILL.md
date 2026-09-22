@@ -21,13 +21,13 @@ Set up an agentic optimization loop that drives a Next.js route from "not instan
 
 - **Invariant: The Verification Loop**: The static shell must commit immediately upon click/navigation. The proof is an automated check: under a lock that gates dynamic data, the static shell still commits without blocking.
 - **The Mechanism: `instant()`**: Use `instant()` assertions as a ruler to verify that the App Shell and `<Suspense>` loading fallbacks commit deterministically.
-- **Data & Suspense Placement**: Push dynamic data reads (e.g. Solana RPC balance queries, Candy Machine live mint status) down below `<Suspense>` boundaries while caching static page skeletons with `"use cache"`.
+- **Data & Suspense Placement**: Push dynamic data reads (e.g. user session data, live database queries, external API fetches) down below `<Suspense>` boundaries while caching static page skeletons with `"use cache"`.
 
 ## Workflow Sequence
 
 1. **Prerequisites**: Next.js 16+ App Router with `cacheComponents` or Suspense-first boundaries.
 2. **Baseline**: Ensure the target route renders and its shell structure is identified.
-3. **RED Test**: Write a failing `instant()` E2E test verifying that the shell commits immediately before dynamic RPC calls resolve.
+3. **RED Test**: Write a failing `instant()` E2E test verifying that the shell commits immediately before dynamic data fetching resolves.
 4. **Fix & Refactor**:
    - Wrap uncached dynamic data fetchers in `<Suspense fallback={<Skeleton />}>`.
    - Use `"use cache"` where static or periodic caching is valid.

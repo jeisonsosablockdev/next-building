@@ -18,7 +18,7 @@ Usage:
   bash ./scripts/ci/pr-open.sh \\
     --title <pr-title> \\
     --body-file <path> \\
-    --scope <scope:app|scope:program|scope:shared|scope:docs|scope:infra|scope:nft> \\
+    --scope <scope:app|scope:shared|scope:docs|scope:infra> \\
     --type <type:feature|type:fix|type:security|type:refactor|type:chore|type:docs> \\
     --risk <risk:low|risk:medium|risk:high> \\
     [--base <branch>] \\

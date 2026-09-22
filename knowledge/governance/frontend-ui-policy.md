@@ -4,7 +4,7 @@ title: Frontend Ui Policy
 description: Frontend Ui Policy - migrated from knowledge/
 tags: [governance]
 timestamp: 2026-07-20T04:23:56Z
-resource: https://github.com/jeisonsosablockdev/brids/blob/develop/knowledge/governance/frontend-ui-policy.md
+resource: https://github.com/jeisonsosablockdev/next-building/blob/develop/knowledge/governance/frontend-ui-policy.md
 ---
 
 📱 FRONTEND UI POLICY

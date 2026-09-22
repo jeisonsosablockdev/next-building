@@ -10,7 +10,6 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 # Newline-separated whitelist of allowed top-level directory names
 ALLOWED="
-programs
 apps
 app
 components
@@ -26,16 +25,13 @@ content
 knowledge
 artifacts
 node_modules
-target
 .next
 .git
 .github
 .agents
 .cursor
-.keys
 .vercel
 .npm-cache
-.cache-synpress
 .pnpm-store
 "
 

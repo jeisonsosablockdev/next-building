@@ -15,9 +15,9 @@
 ## Rollback Plan
 - Exact rollback steps if this change fails in integration/production: <!-- required -->
 
-## Devnet Proof
-- Real transaction signature(s): <!-- required for blockchain/NFT/auth-sensitive flows -->
-- On-chain state evidence used for verification:
+## Verification Evidence
+- Test run / build output: <!-- required for functional or security-sensitive flows -->
+- Evidence used for verification:
 
 ## Human Acceptance
 - Status: pending <!-- change to approved only after user manual testing explicitly approves final merge to develop -->
@@ -26,7 +26,7 @@
 - Accepted residual risk:
 
 ## Feature Note (/docs/features)
-- Path to feature note markdown file under `knowledge/features/*.md`: <!-- required for feature/fix/refactor/nft product changes; otherwise write N/A -->
+- Path to feature note markdown file under `knowledge/features/*.md`: <!-- required for feature/fix/refactor product changes; otherwise write N/A -->
 
 ## Scope Labels (Required)
 - [ ] I added exactly one `scope:*` label
@@ -37,7 +37,7 @@
 - [ ] `npm run validate` passed
 - [ ] Required docs were updated for touched scopes
 - [ ] If this is an epic story branch (`epic-XXX-story-YY`) touching product code: RFC story + EPIC README were updated and traceability is not `TBD`
-- [ ] If wallet/frontend critical path changed: Playwright/Synpress evidence attached
+- [ ] If frontend critical path changed: Playwright evidence attached
 
 ## PR Size Discipline
 - [ ] This PR is <= 400 added lines

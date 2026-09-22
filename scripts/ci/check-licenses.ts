@@ -114,6 +114,41 @@ function main() {
     process.exit(1);
   }
 
+  const reportPath = path.join(REPO_ROOT, 'knowledge/governance/licenses-report.md');
+  const now = new Date().toISOString().split('T')[0];
+  const sortedPackages = [...packages].sort((a, b) => a.name.localeCompare(b.name));
+
+  let reportMd = `# Informe de Licencias y Cumplimiento Legal (Software Governance Report)\n\n`;
+  reportMd += `* **Fecha de generación:** \`${now}\`\n`;
+  reportMd += `* **Total de paquetes auditados:** \`${packages.length}\`\n`;
+  reportMd += `* **Estado de cumplimiento:** ✅ **APROBADO (COMPLIANT)**\n\n`;
+  reportMd += `---\n\n## 📊 Resumen Ejecutivo\n\n`;
+  reportMd += `| Categoría | Cantidad | Descripción |\n`;
+  reportMd += `| :--- | :---: | :--- |\n`;
+  reportMd += `| **Permitidas (Allowed)** | \`${evalResult.allowed.length}\` | Licencias permisivas compatibles con software comercial propietario (MIT, Apache 2.0, BSD, ISC, etc.). |\n`;
+  reportMd += `| **Advertencias (Warn)** | \`${evalResult.warnings.length}\` | Copyleft débil (LGPL, MPL). Permitidas para uso dinámico, requieren atención. |\n`;
+  reportMd += `| **Prohibidas (Disallowed)** | \`${evalResult.violations.length}\` | Copyleft fuerte (GPL, AGPL, SSPL). **Estrictamente prohibidas**. |\n\n`;
+  reportMd += `---\n\n## 🛡️ Política de Licencias Aplicada (\`knowledge/governance/license-policy.json\`)\n\n`;
+  reportMd += `- **Licencias Permitidas:** ${policy.allowed.map((l) => `\`${l}\``).join(', ')}\n`;
+  reportMd += `- **Licencias en Advertencia:** ${policy.warn.map((l) => `\`${l}\``).join(', ')}\n`;
+  reportMd += `- **Licencias Prohibidas:** ${policy.disallowed.map((l) => `\`${l}\``).join(', ')}\n\n`;
+  reportMd += `---\n\n## ⚠️ Librerías con Advertencia (Copyleft Débil)\n\n`;
+  reportMd += `| Paquete | Versión | Licencia |\n| :--- | :---: | :--- |\n`;
+  evalResult.warnings.forEach((w) => {
+    reportMd += `| \`${w.name}\` | \`${w.version}\` | \`${w.license}\` |\n`;
+  });
+  reportMd += `\n---\n\n## 📦 Lista Completa de Dependencias Auditadas\n\n`;
+  reportMd += `| Paquete | Versión | Licencia | Estado |\n| :--- | :---: | :---: | :---: |\n`;
+  sortedPackages.forEach((pkg) => {
+    const isWarn = evalResult.warnings.some((w) => w.name === pkg.name);
+    const isDisallowed = evalResult.violations.some((v) => v.name === pkg.name);
+    const icon = isDisallowed ? '❌' : isWarn ? '⚠️' : '✅';
+    reportMd += `| \`${pkg.name}\` | \`${pkg.version}\` | \`${pkg.license}\` | ${icon} |\n`;
+  });
+  reportMd += `\n`;
+  fs.writeFileSync(reportPath, reportMd, 'utf-8');
+  console.log(`📄 Report updated at ${reportPath}`);
+
   console.log('\n✅ License compliance check passed successfully.');
   process.exit(0);
 }

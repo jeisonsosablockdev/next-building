@@ -14,18 +14,15 @@ const ALLOWED_TYPES = new Set([
   "hotfix",
   "epic",
   "security",
-  "nft",
   "refactor"
 ]);
 const FIX_ARTIFACT_TYPES = new Set(["bugfix", "fix", "hotfix"]);
 const ALLOWED_SCOPES = new Set([
-  "program",
   "app",
   "shared",
   "docs",
   "infra",
-  "security",
-  "nft"
+  "security"
 ]);
 
 function slugify(rawValue) {
@@ -39,20 +36,21 @@ function slugify(rawValue) {
 
 function normalizeIssueId(rawIssueId) {
   const value = String(rawIssueId ?? "").trim().toUpperCase();
+  const defaultPrefix = process.env.DEFAULT_ISSUE_PREFIX || "NXT";
 
   if (!value) {
-    throw new Error("`--issue` is required (example: --issue BRI-149).");
+    throw new Error(`\`--issue\` is required (example: --issue ${defaultPrefix}-149).`);
   }
 
   if (/^\d+$/.test(value)) {
-    return `BRI-${value}`;
+    return `${defaultPrefix}-${value}`;
   }
 
   if (/^[A-Z]+-\d+$/.test(value)) {
     return value;
   }
 
-  throw new Error("`--issue` must look like BRI-149 or 149.");
+  throw new Error(`\`--issue\` must look like ${defaultPrefix}-149 or 149.`);
 }
 
 function normalizeDeveloperHandle(rawHandle) {
@@ -366,7 +364,7 @@ async function createLinearPlan(options) {
   const owner = normalizeDeveloperHandle(options.owner ?? "unknown");
 
   if (!slug) {
-    throw new Error("`--slug` is required (example: --slug wallet-session-hardening).");
+    throw new Error("`--slug` is required (example: --slug auth-session-hardening).");
   }
 
   if (!title) {
@@ -473,12 +471,12 @@ function usage() {
     "Generate a single-issue issue-type-driven parent work + SPEC plan for Linear and print the branch map.",
     "",
     "Usage:",
-    "  npm run linear:plan -- --issue BRI-149 --type feature --owner czambrano --slug my-feature --title \"My feature\" --goal \"...\" --spec \"S01|Planning SPEC|Scope|Validation\"",
+    "  npm run linear:plan -- --issue NXT-149 --type feature --owner jeisonsosa --slug my-feature --title \"My feature\" --goal \"...\" --spec \"S01|Planning SPEC|Scope|Validation\"",
     "",
     "Options:",
-    "  --issue <BRI-149>        Parent Linear issue identifier",
-    "  --type <feature|bugfix|fix|hotfix|epic|security|nft|refactor>",
-    "  --scope <program|app|shared|docs|infra|security|nft>",
+    "  --issue <NXT-149>        Parent Linear issue identifier",
+    "  --type <feature|bugfix|fix|hotfix|epic|security|refactor>",
+    "  --scope <app|shared|docs|infra|security>",
     "  --owner <handle>        Lowercase developer handle used in branch names",
     "  --slug <parent-slug>     Stable slug shared by the parent work branch",
     "  --title <text>           Parent issue title",

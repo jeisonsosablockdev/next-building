@@ -8,10 +8,10 @@ PR_RUN_FILE="${ROOT_DIR}/.agents/pr_last_run.json"
 BRANCH="$(git -C "${ROOT_DIR}" branch --show-current 2>/dev/null || echo "feature/work")"
 ISSUE_ID="$(node -e "try{const p=JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'));process.stdout.write(p.task_id||'');}catch(e){}" "${ROOT_DIR}/.agents/active_task_state.json" 2>/dev/null || echo "")"
 if [[ -z "${ISSUE_ID}" ]]; then
-  ISSUE_ID="$(echo "${BRANCH}" | grep -oE 'BRI-[0-9]+' | head -1 || echo "BRI-186")"
+  ISSUE_ID="$(echo "${BRANCH}" | grep -oE '[A-Z]+-[0-9]+' | head -1 || echo "NXT-101")"
 fi
 
-DEFAULT_TITLE="refactor(monorepo): Monorepo Workspaces & 4-Layer Feature-Driven Design (FDD) Architecture (${ISSUE_ID})"
+DEFAULT_TITLE="feat(app): Next.js 16 4-Layer Architecture Update (${ISSUE_ID})"
 TITLE="${PR_TITLE:-${DEFAULT_TITLE}}"
 CURRENT_SHA="$(git -C "${ROOT_DIR}" rev-parse HEAD)"
 
@@ -35,12 +35,12 @@ SCOPE_LABEL="${PR_SCOPE:-scope:app}"
 TYPE_LABEL="${PR_TYPE:-type:refactor}"
 RISK_LABEL="${PR_RISK:-risk:low}"
 
-if [[ "${BRANCH}" == *"solana"* || "${BRANCH}" == *"program"* ]]; then
-  SCOPE_LABEL="scope:program"
+if [[ "${BRANCH}" == *"api"* ]]; then
+  SCOPE_LABEL="scope:api"
+elif [[ "${BRANCH}" == *"db"* || "${BRANCH}" == *"database"* ]]; then
+  SCOPE_LABEL="scope:db"
 elif [[ "${BRANCH}" == *"app"* || "${BRANCH}" == *"frontend"* || "${BRANCH}" == *"monorepo"* ]]; then
   SCOPE_LABEL="scope:app"
-elif [[ "${BRANCH}" == *"nft"* ]]; then
-  SCOPE_LABEL="scope:nft"
 fi
 
 if [[ "${BRANCH}" == *"feature"* ]]; then

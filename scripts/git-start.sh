@@ -10,21 +10,22 @@ Uso:
 
 Ejemplos:
   ./scripts/git-start.sh app initial-ui
-  ./scripts/git-start.sh feature shared fix-ui-elements --mode parent --owner czambrano --issue BRI-38
-  ./scripts/git-start.sh bugfix shared login-redirect-fix --mode parent --owner czambrano --issue BRI-171
-  ./scripts/git-start.sh epic shared admin-collections-console --mode parent --owner czambrano --issue EPIC-011
-  ./scripts/git-start.sh SPEC hero-copy-tightening --mode spec --owner czambrano --issue BRI-38 --base feature/czambrano-BRI-38-fix-ui-elements
+  ./scripts/git-start.sh app initial-ui
+  ./scripts/git-start.sh feature shared fix-ui-elements --mode parent --owner jeisonsosa --issue NXT-38
+  ./scripts/git-start.sh bugfix shared login-redirect-fix --mode parent --owner jeisonsosa --issue NXT-171
+  ./scripts/git-start.sh epic shared admin-console --mode parent --owner jeisonsosa --issue EPIC-011
+  ./scripts/git-start.sh SPEC hero-copy-tightening --mode spec --owner jeisonsosa --issue NXT-38 --base feature/jeisonsosa-NXT-38-fix-ui-elements
 
 Options:
   --mode <single|parent|spec>
   --owner <handle>
-  --issue <BRI-149>
+  --issue <NXT-149>
   --base <branch>
 USAGE
 }
 
 is_branch_type() {
-  [[ "${1:-}" =~ ^(feature|bugfix|fix|hotfix|epic|security|nft|refactor)$ ]]
+  [[ "${1:-}" =~ ^(feature|bugfix|fix|hotfix|epic|security|refactor)$ ]]
 }
 
 is_spec_type() {
@@ -32,7 +33,7 @@ is_spec_type() {
 }
 
 is_legacy_feature_scope() {
-  [[ "${1:-}" =~ ^(app|program|shared)$ ]]
+  [[ "${1:-}" =~ ^(app|shared)$ ]]
 }
 
 slugify() {
@@ -51,8 +52,9 @@ normalize_issue_key() {
     exit 1
   fi
 
+  local default_prefix="${DEFAULT_ISSUE_PREFIX:-NXT}"
   if [[ "${value}" =~ ^[0-9]+$ ]]; then
-    printf 'BRI-%s' "${value}"
+    printf '%s-%s' "${default_prefix}" "${value}"
     return 0
   fi
 
@@ -61,7 +63,7 @@ normalize_issue_key() {
     return 0
   fi
 
-  echo "❌ Issue inválido: ${raw}. Usa formato BRI-149."
+  echo "❌ Issue inválido: ${raw}. Usa formato ${default_prefix}-149 o [PREFIX]-[NUMERO]."
   exit 1
 }
 
@@ -164,11 +166,6 @@ if [[ -n "${SCOPE}" ]] && ! is_legacy_feature_scope "${SCOPE}"; then
   exit 1
 fi
 
-if [[ "${TYPE}" == "nft" && "${SCOPE}" != "program" ]]; then
-  echo "❌ Las ramas nft solo permiten scope 'program'."
-  exit 1
-fi
-
 if [[ "${MODE}" == "integration" ]]; then
   echo "⚠️  --mode integration es legacy; usa --mode parent."
   MODE="parent"
@@ -240,27 +237,45 @@ if [[ "${MODE}" == "parent" || "${MODE}" == "spec" ]]; then
       const fs = require("fs");
       try {
         const hooks = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
-        const allowed = hooks.enforcement_rules?.allowed_developer_handles || ["jaymusicmachine", "jeisonsosa"];
+        const allowed = hooks.enforcement_rules?.allowed_developer_handles || ["*"];
         const owner = process.argv[2].toLowerCase();
-        if (allowed.includes(owner)) {
+        if (allowed.includes("*") || allowed.length === 0 || allowed.includes(owner)) {
           console.log("true");
         } else {
           console.log("false");
         }
       } catch (e) {
-        console.log("false");
+        console.log("true");
       }
     ' "${HOOKS_FILE_PATH}" "${NORMALIZED_OWNER}")"
 
     if [[ "${VALID_DEV}" != "true" ]]; then
+      ALLOWED_LIST="$(node -e '
+        const fs = require("fs");
+        try {
+          const hooks = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+          console.log((hooks.enforcement_rules?.allowed_developer_handles || ["*"]).join(", "));
+        } catch(e) { console.log("*"); }
+      ' "${HOOKS_FILE_PATH}")"
       echo "❌ ERROR DE GOBERNANZA: El handle de desarrollador '\''${OWNER}'\'' no está permitido."
-      echo "Los handles permitidos configurados en hooks.json son: [jaymusicmachine, jeisonsosa]."
+      echo "Los handles permitidos configurados en hooks.json son: [${ALLOWED_LIST}]."
+      echo "💡 Ejecuta '\''pnpm setup'\'' para configurar tu handle de desarrollador."
       exit 1
     fi
   fi
 
   # Capa 2: Validar existencia del issue key en Linear
-  if [[ -n "${LINEAR_API_KEY:-}" ]]; then
+  REQUIRE_LINEAR="$(node -e '
+    const fs = require("fs");
+    try {
+      const hooks = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
+      console.log(hooks.enforcement_rules?.require_linear_issue_exists !== false ? "true" : "false");
+    } catch (e) {
+      console.log("false");
+    }
+  ' "${HOOKS_FILE_PATH}")"
+
+  if [[ "${REQUIRE_LINEAR}" == "true" && "${LINEAR_ENABLED:-true}" != "false" && -n "${LINEAR_API_KEY:-}" ]]; then
     echo "🔍 Validando existencia de issue ${NORMALIZED_ISSUE} en Linear..."
     ISSUE_EXISTS="$(node -e '
       const https = require("https");
@@ -322,11 +337,10 @@ if [[ "${MODE}" == "parent" || "${MODE}" == "spec" ]]; then
       echo "⚠️ Warning: No se pudo conectar a Linear para validar el issue. Continuando..."
     else
       echo "✓ Issue ${NORMALIZED_ISSUE} confirmado en Linear."
+    elif [[ "${REQUIRE_LINEAR}" == "true" && -z "${LINEAR_API_KEY:-}" ]]; then
+      echo "⚠️ Warning: LINEAR_API_KEY no está configurado. Omitiendo validación estricta de issue en Linear."
     fi
-  else
-    echo "⚠️ Warning: LINEAR_API_KEY no está configurado. Omitiendo validación estricta de issue en Linear."
   fi
-fi
 
 git status --porcelain >/dev/null
 ensure_base_branch_available "${BASE_BRANCH}"
@@ -438,7 +452,7 @@ EOF
 ## What will be synchronized to Linear
 <!-- Qué información se sincronizará con Linear -->"
 
-  if [[ "${TYPE}" =~ ^(feature|security|nft|refactor|epic)$ ]]; then
+  if [[ "${TYPE}" =~ ^(feature|security|refactor|epic)$ ]]; then
     PROBLEM_FILE="knowledge/features/feature-${DOC_SLUG}.md"
     SOLUTION_FILE="knowledge/features/feature-${DOC_SLUG}-implementation.md"
     
@@ -484,7 +498,7 @@ echo "   1) Crea o actualiza el artefacto que gobierna el trabajo antes de imple
 if [[ "${TYPE}" == "fix" ]]; then
   echo "      - knowledge/fixes/fix-<slug>.md"
   echo "      - knowledge/fixes/fix-<slug>-implementation.md"
-elif [[ "${TYPE}" == "feature" || "${TYPE}" == "security" || "${TYPE}" == "nft" || "${TYPE}" == "refactor" ]]; then
+elif [[ "${TYPE}" == "feature" || "${TYPE}" == "security" || "${TYPE}" == "refactor" ]]; then
   echo "      - knowledge/features/feature-<slug>.md"
   echo "      - knowledge/features/feature-<slug>-implementation.md"
 fi

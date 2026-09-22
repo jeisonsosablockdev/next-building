@@ -9,7 +9,7 @@ runner_compatible:
   - claude
 scope:
   - "unit and integration verification"
-  - "Playwright and Synpress execution"
+  - "Playwright execution"
   - "responsive QA"
   - "browser evidence capture"
   - "in-code test commentary (Arrange/Act/Assert and contract descriptions)"

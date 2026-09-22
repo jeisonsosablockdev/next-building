@@ -18,12 +18,6 @@
       "sourceType": "github",
       "skillPath": "skills/next-dev-loop/SKILL.md",
       "computedHash": "39eadc98511c19d689589cfc6ee113b1ad36fa7c3b1192f073afa87ecf723364"
-    },
-    "solana-dev": {
-      "source": "solana-foundation/solana-dev-skill",
-      "sourceType": "github",
-      "skillPath": "skill/SKILL.md",
-      "computedHash": "51ba37080e2377cd57f278db8702dc9cfcd1f7520a42cbcca8f83924d59b0560"
     }
   }
 }

@@ -1,39 +1,33 @@
-# Next.js + Solana Monorepo Starter
+# Next.js Monorepo Starter
 
-High-performance Next.js 16 and Solana monorepo starter with 4-Layer Functional Architecture, Autonomous Agent Governance Harness, and Solana Devnet integration.
+High-performance Next.js 16 monorepo starter with 4-Layer Functional Architecture and Autonomous Agent Governance Harness.
 
 <!-- DOCS-AUTO:START -->
 ## Documentation Snapshot (Auto-generated)
 
-Updated: 2026-08-24 03:17:38 UTC
+Updated: 2026-09-21 10:56:19 UTC
 
 | Document | Scope | Last Updated | Last Commit |
 | --- | --- | --- | --- |
-| [`architecture-overview.md`](./knowledge/architecture/architecture-overview.md) | general | not set | 2026-08-21 56ef66fa |
-| [`auth-flow.md`](./knowledge/architecture/auth-flow.md) | frontend/auth | not set | 2026-08-22 423e1ae9 |
-| [`authority-model.md`](./knowledge/architecture/authority-model.md) | blockchain | not set | 2026-08-21 56ef66fa |
-| [`devnet-proof.md`](./knowledge/architecture/devnet-proof.md) | blockchain | not set | 2026-08-21 56ef66fa |
-| [`index.md`](./knowledge/architecture/index.md) | general | not set | 2026-07-25 93d7cab5 |
-| [`nft-spec.md`](./knowledge/architecture/nft-spec.md) | nft | not set | 2026-08-21 56ef66fa |
-| [`session-model.md`](./knowledge/architecture/session-model.md) | frontend/auth | not set | 2026-08-22 423e1ae9 |
-| [`solana-stack.md`](./knowledge/architecture/solana-stack.md) | general | not set | 2026-07-19 35801116 |
-| [`state-machine.md`](./knowledge/architecture/state-machine.md) | blockchain | not set | 2026-08-21 56ef66fa |
-| [`threat-model.md`](./knowledge/architecture/threat-model.md) | blockchain | not set | 2026-08-21 56ef66fa |
-| [`toolchain-policy.md`](./knowledge/architecture/toolchain-policy.md) | general | not set | 2026-06-16 ea2ee147 |
+| [`architecture-overview.md`](./knowledge/architecture/architecture-overview.md) | architecture | not set | 2026-08-23 a69db56b |
+| [`auth-flow.md`](./knowledge/architecture/auth-flow.md) | frontend/auth | 2026-09-21 04:26:52 UTC | 2026-08-23 a69db56b |
+| [`authority-model.md`](./knowledge/architecture/authority-model.md) | architecture | not set | 2026-08-23 a69db56b |
+| [`index.md`](./knowledge/architecture/index.md) | general | not set | 2026-08-23 a69db56b |
+| [`session-model.md`](./knowledge/architecture/session-model.md) | frontend/auth | 2026-09-21 04:26:52 UTC | 2026-08-23 a69db56b |
+| [`state-machine.md`](./knowledge/architecture/state-machine.md) | architecture | not set | 2026-08-23 a69db56b |
+| [`threat-model.md`](./knowledge/architecture/threat-model.md) | architecture | not set | 2026-08-23 a69db56b |
+| [`toolchain-policy.md`](./knowledge/architecture/toolchain-policy.md) | general | not set | 2026-08-23 a69db56b |
 
 ### Required Docs by Change Type
-- Blockchain (/programs): `knowledge/architecture/architecture-overview.md`, `knowledge/architecture/authority-model.md`, `knowledge/architecture/state-machine.md`, `knowledge/architecture/threat-model.md`, `knowledge/architecture/devnet-proof.md`
 - Frontend/Auth (/app): `knowledge/architecture/auth-flow.md`, `knowledge/architecture/session-model.md`
-- NFT features: `knowledge/architecture/nft-spec.md`
+- Architecture & Governance: `knowledge/architecture/architecture-overview.md`
 <!-- DOCS-AUTO:END -->
 
 ## Operational Architecture
 
-This repository is structured as a high-performance **pnpm monorepo** for **Next.js** and **Solana**:
+This repository is structured as a high-performance **pnpm monorepo** for **Next.js**:
 
-- `apps/web/`: Next.js 16 (App Router) presentation application with Tailwind CSS, `@solana/wallet-adapter-react`, and 4-layer functional architecture.
-- `programs/`: Solana on-chain programs written in Rust with Anchor framework.
-- `packages/solana-client/`: Shared Solana SDK, types, and IDL client bindings.
+- `apps/web/`: Next.js 16 (App Router) presentation application with Tailwind CSS, React 19, Motion, and 4-layer functional architecture.
 - `knowledge/`: Canonical OKF documentation, governance policies (`knowledge/governance/`), and architecture specifications.
 - `scripts/`: Task lifecycle automation (`task-init.sh`), 4-layer architecture linter, and CI governance scripts.
 - `tests/`: Integration tests, unit tests, and autonomous agent governance harness (`tests/harness/`).
@@ -41,18 +35,33 @@ This repository is structured as a high-performance **pnpm monorepo** for **Next
 
 ---
 
-## 4-Layer Functional Web3 Architecture
+## 4-Layer Functional Architecture
 
 All frontend and client code in `apps/web/src/` adheres strictly to 4 decoupled layers:
 
 1. **Layer 1: Presentation** (`apps/web/src/app`, `apps/web/src/components`):
-   - UI views, layout skeletons, wallet connection buttons, client interaction boundaries.
+   - UI views, layout skeletons, interactive components, client boundaries.
 2. **Layer 2: Application / Consumption** (`apps/web/src/lib/hooks`, `apps/web/src/lib/state`):
-   - React custom hooks, normalized wallet state, application store mutations.
+   - React custom hooks, client state management, application store mutations.
 3. **Layer 3: Domain / Pipelines** (`apps/web/src/lib/pipelines`):
-   - Pure domain business logic, transaction construction pipelines, validation rules.
+   - Pure domain business logic, input validation pipelines, execution workflows.
 4. **Layer 4: Infrastructure** (`apps/web/src/lib/infrastructure`, `apps/web/src/lib/utils.ts`):
-   - Solana Devnet RPC connectors, Solscan URL generators, class name and formatting helpers.
+   - API clients, environment resolution, HTTP transports, and shared utilities.
+
+---
+
+## Getting Started & First-Time Setup
+
+When cloning this repository for the first time, run the interactive setup wizard:
+
+```bash
+pnpm setup
+```
+
+The wizard will configure:
+1. **Developer Handle**: Sets your username in `.agents/hooks.json` to enforce branch and task ownership.
+2. **Project Name**: Updates root `package.json` and `apps/web/package.json` with your project's slug.
+3. **Linear Integration (Optional)**: Connect your Linear organization with API key and issue prefix, or skip for seamless standalone/local task workflows.
 
 ---
 

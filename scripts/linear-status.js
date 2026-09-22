@@ -8,11 +8,11 @@ const {
 function usage() {
   return [
     "Usage:",
-    "  node ./scripts/linear-status.js --state <start|review|done> [--issue <BRI-149>] [--branch <branch>] [--cwd <path>]",
+    "  node ./scripts/linear-status.js --state <start|review|done> [--issue <NXT-149>] [--branch <branch>] [--cwd <path>]",
     "",
     "Examples:",
     "  node ./scripts/linear-status.js --state start",
-    "  node ./scripts/linear-status.js --state review --issue BRI-149",
+    "  node ./scripts/linear-status.js --state review --issue NXT-149",
     "  node ./scripts/linear-status.js --state done --issue EPIC-011",
     "",
     "Environment:",
@@ -64,6 +64,15 @@ async function runCli(argv) {
 
   if (args.help) {
     console.log(usage());
+    return;
+  }
+
+  const isLinearEnabled =
+    String(process.env.LINEAR_ENABLED ?? "true").toLowerCase() !== "false" &&
+    String(process.env.LINEAR_AUTOSTATUS ?? "1") !== "0";
+
+  if (!isLinearEnabled) {
+    console.log("ℹ️ Linear integration is disabled (LINEAR_ENABLED=false). Skipping issue status update.");
     return;
   }
 
